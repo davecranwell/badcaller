@@ -1,4 +1,4 @@
-import path from 'path'
+import path from "path";
 import express, { Request, Response } from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -7,13 +7,36 @@ import api from "./api";
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        objectSrc: ["'self'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'self'", "ourDomain.us.auth0.com"],
+      },
+    },
+  })
+);
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", express.static(path.join(__dirname, '../client/build')));
+app.use(
+  "/",
+  express.static(path.join(__dirname, "..", "..", "client", "build"))
+);
+
+app.get("/static", function (req, res) {
+  express.static(path.join(__dirname, "..", "..", "client", "build", "static"));
+});
 
 app.use("/api", api);
 

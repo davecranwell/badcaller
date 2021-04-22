@@ -22,7 +22,7 @@ server.on("listening", () => {
       logger.trace(data);
 
       if (data.indexOf("NMBR=") > -1) {
-        const phoneNumber = data.split("=").pop();
+        const phoneNumber: string = data.split("=").pop() as string;
 
         await lookupNumber(phoneNumber);
       }
