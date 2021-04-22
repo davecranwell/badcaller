@@ -6,10 +6,10 @@ const serialPort = config.get("serialPort") as string;
 const port = new SerialPort(serialPort, { autoOpen: false });
 const parser = port.pipe(new Readline({ delimiter: "\n" }));
 
-export const listen = ({ onOpen, onData }) => {
-  port.write("AT+VCID=1\r", function (err) {
-    if (err) {
-      return console.log("Error on write: ", err.message);
+export const listen = ({ onOpen, onData }: any) => {
+  port.write("AT+VCID=1\r", (error) => {
+    if (error) {
+      return console.log("Error on write: ", error.message);
     }
     console.log("Enabling CallerId nice");
   });

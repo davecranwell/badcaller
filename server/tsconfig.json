@@ -1,11 +1,11 @@
 {
-  "compilerOPtions": {
-    "outDir": "./dist",
+  "compilerOptions": {
+    "outDir": "./build",
     "target": "es5",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCaseingInFileNames": true
+    "forceConsistentCasingInFileNames": true
   }
 }

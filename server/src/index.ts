@@ -18,8 +18,8 @@ server.on("listening", () => {
     onOpen: () => {
       logger.info("Started serial port listener");
     },
-    onData: async (data) => {
-      console.log("Data received: " + data);
+    onData: async (data: string) => {
+      logger.trace(data);
 
       if (data.indexOf("NMBR=") > -1) {
         const phoneNumber = data.split("=").pop();
