@@ -1,31 +1,45 @@
 import config from "config";
-import axios from "axios";
+import { Server as SocketServer } from "socket.io";
 
 import app from "./app";
 import makeLogger from "./logger";
-import { listen } from "./lib/serialInterface";
+import makeSerialConnection from "./lib/serialInterface";
 import lookupNumber from "./lib/lookupNumber";
 
 const logger = makeLogger("index");
 const port = config.get("port");
 
-const server = app.listen(port);
+const express = app.listen(port);
 
-server.on("listening", () => {
+const io = new SocketServer(express, {
+  cors: { origin: "http://localhost:3000" },
+}).on("connection", (socket) => {
+  logger.info("Client socket connected");
+});
+
+express.on("listening", async () => {
   logger.info("Started server");
 
-  const serial = listen({
-    onOpen: () => {
-      logger.info("Started serial port listener");
-    },
+  const serialPort = makeSerialConnection({
     onData: async (data: string) => {
-      logger.trace(data);
-
       if (data.indexOf("NMBR=") > -1) {
-        const phoneNumber: string = data.split("=").pop() as string;
+        const number: string = data.split("=").pop()?.trim() as string;
 
-        await lookupNumber(phoneNumber);
+        //const rating = await lookupNumber(number);
+
+        io.emit("/caller", {
+          number,
+          rating,
+        });
       }
+
+      return data;
     },
   });
+
+  try {
+    serialPort.open();
+  } catch (e) {
+    logger.error(e);
+  }
 });

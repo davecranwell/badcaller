@@ -1,20 +1,37 @@
 import config from "config";
 import SerialPort from "serialport";
 import Readline from "@serialport/parser-readline";
+import MockBinding from "@serialport/binding-mock";
 
-const serialPort = config.get("serialPort") as string;
-const port = new SerialPort(serialPort, { autoOpen: false });
-const parser = port.pipe(new Readline({ delimiter: "\n" }));
+import makeLogger from "../logger";
 
-export const listen = ({ onOpen, onData }: any) => {
-  port.write("AT+VCID=1\r", (error) => {
-    if (error) {
-      return console.log("Error on write: ", error.message);
-    }
-    console.log("Enabling CallerId nice");
+const logger = makeLogger("serialInterface");
+
+const portName = config.get("serialPort") as string;
+
+if (process.env.NODE_ENV === "development") {
+  SerialPort.Binding = MockBinding;
+  MockBinding.createPort(portName, { echo: true, record: true });
+
+  // @ts-ignore
+  setTimeout(() => serialPort.binding.emitData("\nNMBR=1\n"), 500);
+}
+
+const serialPort = new SerialPort(portName, { autoOpen: false });
+const parser = serialPort.pipe(new Readline({ delimiter: "\n" }));
+
+export default ({ onData }: any) => {
+  serialPort.on("open", () => {
+    logger.info(`Opened serial port ${portName}`);
+
+    serialPort.write("AT+VCID=1\r", (error) => {
+      if (error) {
+        return logger.error("Error on write: ", error.message);
+      }
+      logger.info("Enabled CallerID");
+    });
   });
-
-  port.on("open", onOpen);
-
   parser.on("data", onData);
+
+  return serialPort;
 };
