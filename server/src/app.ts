@@ -1,11 +1,11 @@
-import path from "path";
-import express, { Request, Response } from "express";
-import helmet from "helmet";
-import cors from "cors";
+import path from 'path'
+import express, { Request, Response } from 'express'
+import helmet from 'helmet'
+import cors from 'cors'
 
-import api from "./api";
+import api from './api'
 
-const app = express();
+const app = express()
 
 app.use(
   helmet({
@@ -13,39 +13,39 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:"],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:'],
         connectSrc: ["'self'"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         objectSrc: ["'self'"],
         mediaSrc: ["'self'"],
-        frameSrc: ["'self'", "ourDomain.us.auth0.com"],
+        frameSrc: ["'self'", 'ourDomain.us.auth0.com'],
       },
     },
   })
-);
-app.use(cors());
-app.use(express.json());
-app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
+)
+app.use(cors())
+app.use(express.json())
+app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(
-  "/",
-  express.static(path.join(__dirname, "..", "..", "client", "build"))
-);
+  '/',
+  express.static(path.join(__dirname, '..', '..', 'client', 'build'))
+)
 
-app.get("/static", function (req, res) {
-  express.static(path.join(__dirname, "..", "..", "client", "build", "static"));
-});
+app.get('/static', function (req, res) {
+  express.static(path.join(__dirname, '..', '..', 'client', 'build', 'static'))
+})
 
-app.use("/api", api);
+app.use('/api', api)
 
 app.use((req, res) => {
-  return res.status(404).json({ message: "Not found" });
-});
+  return res.status(404).json({ message: 'Not found' })
+})
 
 app.use((err: Error, req: Request, res: Response) => {
-  return res.status(500).json({ message: "Error" });
-});
+  return res.status(500).json({ message: 'Error' })
+})
 
-export default app;
+export default app
