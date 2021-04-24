@@ -1,5 +1,5 @@
 {
-  "port": 8080,
-  "loggingLevel": "trace",
+  "port": 80,
+  "loggingLevel": "info",
   "serialPort": "/dev/ttyACM0"
 }
