@@ -6,7 +6,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
-const socket = io('http://localhost:8080', { autoConnect: false })
+const socket = io('/', { autoConnect: false })
 
 socket.connect()
 
