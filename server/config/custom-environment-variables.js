@@ -1,0 +1,3 @@
+{
+  serialPort: 'SERIAL_PORT'
+}

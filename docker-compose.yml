@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  badcaller:
+    image: xcession2k/badcaller:latest
+    restart: always
+    environment:
+      NODE_ENV: production
+      SERIAL_PORT: /dev/ttyACM0
+    ports:
+      - 80:80
+    expose:
+      - 80
+    devices:
+      - '/dev/ttyACM0:/dev/ttyACM0'
+  watchtower:
+    image: v2tec/watchtower:armhf-latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30
