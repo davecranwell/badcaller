@@ -14,7 +14,7 @@ RUN npm run build
 
 WORKDIR /app/client
 COPY ./client/package*.json ./
-RUN npm install
+RUN npm install --production
 COPY ./client/public ./public
 COPY ./client/src ./src
 RUN npm run build
@@ -27,7 +27,7 @@ COPY --from=builder /app/server/node_modules ./node_modules
 COPY --from=builder /app/server/build ./build
 COPY --from=builder /app/server/config ./config 
 
-WORKDIR /app/client
+WORKDIR /app/client/build
 COPY --from=builder /app/client/build ./
 
 WORKDIR /app/server
