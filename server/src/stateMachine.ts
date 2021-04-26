@@ -1,5 +1,6 @@
 import {
   Machine,
+  DoneEventObject,
   State,
   actions,
   assign,
@@ -7,8 +8,11 @@ import {
   sendParent,
   interpret,
   spawn,
+  StateMachine,
+  AnyEventObject,
 } from 'xstate'
 import { Server } from 'socket.io'
+import SerialPort from 'serialport'
 
 import lookupNumber from './lib/lookupNumber'
 
@@ -20,7 +24,17 @@ type SerialModemContext = {
 
 const { log } = actions
 
-export default (io: Server) => {
+const translateEvent = (event: DoneEventObject) => {
+  const { type, data } = event
+  return {
+    type: type.includes('done.invoke.')
+      ? event.type.replace('done.invoke.', '')
+      : type,
+    data,
+  }
+}
+
+export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
   const serialModemMachine = Machine<SerialModemContext>(
     {
       id: 'serialModem',
@@ -32,14 +46,14 @@ export default (io: Server) => {
       },
       states: {
         idle: {
-          entry: ['ioUpdate', log('Idle!')],
+          entry: ['socketIoUpdate', log('Idle!')],
           on: {
             RING: 'ringing',
           },
         },
         ringing: {
           initial: 'awaitingNumber',
-          entry: ['ioUpdate', log('Ringing!')],
+          entry: ['socketIoUpdate', log('Ringing!')],
           invoke: {
             id: 'ringTimeout',
             src: (context) => (cb) => {
@@ -57,21 +71,22 @@ export default (io: Server) => {
             NOT_RINGING: 'idle',
           },
           states: {
+            reset: {},
             awaitingNumber: {
-              entry: ['ioUpdate', log('Awaiting number!')],
+              entry: ['socketIoUpdate', log('Awaiting number!')],
               on: {
                 NUMB: {
                   target: 'lookingUp',
                   actions: assign({
-                    number: (context, event) => event.val,
+                    number: (context, event) => event.data,
                   }),
                 },
               },
             },
             lookingUp: {
-              entry: ['ioUpdate', log('Looking up!')],
+              entry: ['socketIoUpdate', log('Looking up!')],
               invoke: {
-                id: 'lookupNumber',
+                id: 'LOOKEDUP',
                 src: (context, event) => lookupNumber(context.number!),
                 onDone: {
                   target: 'success',
@@ -84,10 +99,10 @@ export default (io: Server) => {
               },
             },
             success: {
-              entry: ['ioUpdate', log('Lookup succeeded!')],
+              entry: ['socketIoUpdate', log('Lookup succeeded!')],
             },
             failure: {
-              entry: ['ioUpdate', log('Lookup failed!')],
+              entry: ['socketIoUpdate', log('Lookup failed!')],
             },
           },
         },
@@ -95,19 +110,21 @@ export default (io: Server) => {
     },
     {
       actions: {
-        ioUpdate: (context, event) => {
-          io.emit('state', context)
+        socketIoUpdate: (context, event) => {
+          const newEvent = translateEvent(event)
+          console.log(newEvent)
+          io.emit('message', newEvent)
         },
       },
     }
   )
 
   setTimeout(() => {
-    serialModemService.send({ type: 'RING', val: 'bar' })
+    serialModemService.send({ type: 'RING', data: 'bar' })
   }, 2000)
 
   setTimeout(() => {
-    serialModemService.send({ type: 'NUMB', val: '123' })
+    serialModemService.send({ type: 'NUMB', data: '123' })
   }, 4000)
 
   // setTimeout(() => {

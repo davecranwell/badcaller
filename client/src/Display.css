@@ -1,0 +1,66 @@
+.display {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+}
+
+.display--dangerous {
+  background-color: #c9323b;
+}
+
+.display--negative,
+.display--harassing {
+  background-color: #e96034;
+}
+
+.display--neutral {
+  background-color: #666;
+}
+
+.display--safe {
+  background-color: #4a9401;
+}
+
+.display .incoming-call-label,
+.display .rating-label,
+.display .incoming-call-number,
+.display .rating-score {
+  display: block;
+}
+
+.display .incoming-call-label,
+.display .rating-label {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 1.6vw;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.display .incoming-call-number,
+.display .rating-score {
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.display .incoming-call {
+}
+
+.display .incoming-call-label {
+}
+
+.display .incoming-call-number {
+  font-size: 10vw;
+  line-height: 1;
+}
+
+.display .rating {
+}
+
+.display .rating-score {
+  font-size: 6vw;
+  line-height: 1;
+}

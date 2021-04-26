@@ -13,7 +13,7 @@ export default async (number: string) => {
     </html>`
 
     const $ = cheerio.load(data)
-    const rating = $('.numberDetails .dataColumn').text()
+    const rating = $('.numberDetails .dataColumn').text().toLowerCase()
 
     if (!rating.length) return false
 

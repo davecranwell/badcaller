@@ -1,14 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { io } from 'socket.io-client'
 
-import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
-const socket = io('/', { autoConnect: false })
-
-socket.connect()
+import './index.css'
 
 ReactDOM.render(
   <React.StrictMode>
