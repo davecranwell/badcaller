@@ -1,6 +1,5 @@
-import { useContext, useReducer, useState, useCallback, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 
-import { SocketContext } from './context/socket'
 import Display from './Display'
 
 import './App.css'
@@ -40,8 +39,6 @@ function reducer(state, action) {
 }
 
 function App() {
-  const socket = useContext(SocketContext)
-  // const [data, setData] = use()
   const [state, dispatch] = useReducer(reducer, {
     callActive: false,
     number: undefined,
