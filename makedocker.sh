@@ -8,4 +8,4 @@ docker push xcession2k/badcaller:latest
 
 docker save xcession2k/badcaller:latest | gzip > badcaller-latest.tar.gz
 
-scp badcaller-latest.tar.gz pi@192.168.1.24:/home/pi
+#scp badcaller-latest.tar.gz pi@192.168.1.24:/home/pi
