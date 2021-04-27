@@ -4,9 +4,6 @@ services:
   badcaller:
     image: index.docker.io/xcession2k/badcaller:latest
     restart: always
-    environment:
-      NODE_ENV: production
-      SERIAL_PORT: /dev/ttyACM0
     ports:
       - 80:8080
     expose:
