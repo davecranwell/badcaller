@@ -5,6 +5,15 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  color: #333;
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(0, 0, 0, 0.45),
+    transparent
+  );
+}
+
+.display--callactive {
   color: #fff;
 }
 
@@ -23,6 +32,16 @@
 
 .display--safe {
   background-color: #4a9401;
+}
+
+.display .idle-label,
+.display .incoming-call-label,
+.display .rating-label {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 1.6vw;
+  line-height: 1;
+  opacity: 0.8;
 }
 
 .display .incoming-call-label,
