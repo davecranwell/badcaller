@@ -1,13 +1,14 @@
 import { useReducer, useEffect } from 'react'
+import socketio from 'socket.io-client'
 
 import Display from './Display'
 
 import './App.css'
 
-import socketio from 'socket.io-client'
+// eslint-disable-next-line
+const { socketUrl } = CONFIG
 
 function reducer(state, action) {
-  console.log(state, action)
   const { type, data } = action
 
   switch (type) {
@@ -29,9 +30,9 @@ function reducer(state, action) {
     case 'NOT_RINGING':
       return {
         ...state,
-        // callActive: false,
-        // number: undefined,
-        // rating: undefined,
+        callActive: false,
+        number: undefined,
+        rating: undefined,
       }
     default:
       throw new Error()
@@ -46,7 +47,7 @@ function App() {
   })
 
   useEffect(() => {
-    const socket = socketio('http://localhost:8080')
+    const socket = socketio(socketUrl)
     socket.on('message', (data) => {
       dispatch(data)
     })

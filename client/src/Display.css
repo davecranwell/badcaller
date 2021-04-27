@@ -14,24 +14,37 @@
 }
 
 .display--callactive {
-  color: #fff;
+  color: #333;
 }
 
 .display--dangerous {
   background-color: #c9323b;
+  color: #fff;
 }
 
 .display--negative,
 .display--harassing {
   background-color: #e96034;
+  color: #fff;
 }
 
 .display--neutral {
   background-color: #666;
+  color: #fff;
 }
 
 .display--safe {
   background-color: #4a9401;
+  color: #fff;
+}
+
+.display--callinactive .idle-label {
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.display--callinactive .spinner circle,
+.display--callinactive .spinner circle {
+  color: #333;
 }
 
 .display .idle-label,
@@ -42,6 +55,7 @@
   font-size: 1.6vw;
   line-height: 1;
   opacity: 0.8;
+  margin: 0;
 }
 
 .display .incoming-call-label,
@@ -62,24 +76,34 @@
 
 .display .incoming-call-number,
 .display .rating-score {
+  text-transform: capitalize;
+  display: block;
+  position: relative;
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
-.display .incoming-call {
+.display .incoming-call-number .spinner,
+.display .rating-score .spinner {
+  position: absolute;
+  width: 4.6vw;
+  height: 4.6vw;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
-.display .incoming-call-label {
+.display .incoming-call {
+  margin: 0;
 }
 
 .display .incoming-call-number {
   font-size: 10vw;
+  min-height: 10vw;
   line-height: 1;
-}
-
-.display .rating {
 }
 
 .display .rating-score {
   font-size: 6vw;
+  min-height: 6vw;
   line-height: 1;
 }
