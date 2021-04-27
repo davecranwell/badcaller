@@ -1,0 +1,7 @@
+.status {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: beige;
+  padding: 10px 0;
+}

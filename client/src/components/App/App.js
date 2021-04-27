@@ -1,7 +1,8 @@
 import { useReducer, useEffect } from 'react'
 import socketio from 'socket.io-client'
 
-import Display from './Display'
+import Display from '../Display/Display'
+import Status from '../Status/Status'
 
 import './App.css'
 
@@ -12,6 +13,22 @@ function reducer(state, action) {
   const { type, data } = action
 
   switch (type) {
+    case 'CONNECT':
+      return {
+        ...state,
+        connectionError: false,
+        disconnected: false,
+      }
+    case 'CONNECT_ERROR':
+      return {
+        ...state,
+        connectionError: true,
+      }
+    case 'DISCONNECTED':
+      return {
+        ...state,
+        disconnected: true,
+      }
     case 'RING':
       return {
         ...state,
@@ -44,19 +61,38 @@ function App() {
     callActive: false,
     number: undefined,
     rating: undefined,
+    connectionError: false,
+    disconnected: false,
   })
 
   useEffect(() => {
     const socket = socketio(socketUrl)
+
     socket.on('message', (data) => {
       dispatch(data)
+    })
+    socket.on('connect', (err) => {
+      dispatch({ type: 'CONNECT' })
+    })
+    socket.on('connect_error', (err) => {
+      dispatch({ type: 'CONNECT_ERROR' })
+    })
+    socket.on('disconnected', (err) => {
+      dispatch({ type: 'DISCONNECTED' })
     })
 
     return () => socket.disconnect()
   }, [])
 
+  const { disconnected, connectionError } = state
+
   return (
     <div className="app">
+      <Status
+        disconnected={disconnected}
+        connectionError={connectionError}
+      ></Status>
+
       <Display {...state} />
     </div>
   )
