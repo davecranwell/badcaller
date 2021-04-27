@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node build",
-    "start:local": "ts-node-dev --respawn --transpile-only -- src/",
+    "start": "NODE_ENV=production node build",
+    "start:dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only -- src/",
     "build": "rm -rf build && tsc"
   },
   "author": "",

@@ -1,28 +1,17 @@
-import {
-  Machine,
-  DoneEventObject,
-  State,
-  actions,
-  assign,
-  send,
-  sendParent,
-  interpret,
-  spawn,
-  StateMachine,
-  AnyEventObject,
-} from 'xstate'
+import { Machine, DoneEventObject, assign, interpret } from 'xstate'
 import { Server } from 'socket.io'
 import SerialPort from 'serialport'
 
 import lookupNumber from './lib/lookupNumber'
+import makeLogger from './logger'
+
+const logger = makeLogger('index')
 
 type SerialModemContext = {
   number?: string
   rating?: string
   timeout: number
 }
-
-const { log } = actions
 
 const translateEvent = (event: DoneEventObject) => {
   const { type, data } = event
@@ -46,14 +35,14 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
       },
       states: {
         idle: {
-          entry: ['socketIoUpdate', log('Idle!')],
+          entry: ['socketIoUpdate', 'log'],
           on: {
             RING: 'ringing',
           },
         },
         ringing: {
           initial: 'awaitingNumber',
-          entry: ['socketIoUpdate', log('Ringing!')],
+          entry: ['socketIoUpdate', 'log'],
           invoke: {
             id: 'ringTimeout',
             src: (context) => (cb) => {
@@ -73,7 +62,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
           states: {
             reset: {},
             awaitingNumber: {
-              entry: ['socketIoUpdate', log('Awaiting number!')],
+              entry: ['socketIoUpdate', 'log'],
               on: {
                 NUMB: {
                   target: 'lookingUp',
@@ -84,7 +73,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               },
             },
             lookingUp: {
-              entry: ['socketIoUpdate', log('Looking up!')],
+              entry: ['socketIoUpdate', 'log'],
               invoke: {
                 id: 'LOOKEDUP',
                 src: (context, event) => lookupNumber(context.number!),
@@ -99,10 +88,10 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               },
             },
             success: {
-              entry: ['socketIoUpdate', log('Lookup succeeded!')],
+              entry: ['socketIoUpdate', 'log'],
             },
             failure: {
-              entry: ['socketIoUpdate', log('Lookup failed!')],
+              entry: ['socketIoUpdate', 'log'],
             },
           },
         },
@@ -111,35 +100,21 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
     {
       actions: {
         socketIoUpdate: (context, event) => {
-          const newEvent = translateEvent(event)
-          console.log(newEvent)
-          io.emit('message', newEvent)
+          io.emit('message', translateEvent(event))
+        },
+        log: (context, event) => {
+          const logitem = {
+            context,
+            event,
+          }
+
+          logger.trace(JSON.stringify(logitem))
         },
       },
     }
   )
 
-  setTimeout(() => {
-    serialModemService.send({ type: 'RING', data: 'bar' })
-  }, 2000)
-
-  setTimeout(() => {
-    serialModemService.send({ type: 'NUMB', data: '123' })
-  }, 4000)
-
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 4000)
-
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 5000)
-
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 6000)
-
-  const serialModemService = interpret(serialModemMachine).start()
+  const serialModemService = interpret(serialModemMachine)
 
   return serialModemService
 }

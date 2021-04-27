@@ -28,6 +28,7 @@ io.on('connection', (socket) => {
   socket.emit('hello', 'world')
 })
 
+// send serial port events to statemachine
 const serialPort = makeSerialConnection({
   onData: async (data: string) => {
     // format serial data nicer
@@ -38,11 +39,13 @@ const serialPort = makeSerialConnection({
         }
       : { type: data.trim() }
 
+    logger.trace(stateData)
     stateMachine.send(stateData)
   },
 })
 
-const stateMachine = makeStateMachine({ io, serialPort })
+// start state machine
+const stateMachine = makeStateMachine({ io, serialPort }).start()
 
 express.on('listening', async () => {
   logger.info('Started server')
@@ -53,3 +56,26 @@ express.on('listening', async () => {
     logger.error(e)
   }
 })
+
+// Fake effects for development only
+if (process.env.NODE_ENV !== 'production') {
+  setTimeout(() => {
+    stateMachine.send({ type: 'RING', data: 'bar' })
+  }, 2000)
+
+  setTimeout(() => {
+    stateMachine.send({ type: 'NUMB', data: '123' })
+  }, 4000)
+
+  // setTimeout(() => {
+  //   serialModemMService.send('RING')
+  // }, 4000)
+
+  // setTimeout(() => {
+  //   serialModemMService.send('RING')
+  // }, 5000)
+
+  // setTimeout(() => {
+  //   serialModemMService.send('RING')
+  // }, 6000)
+}
