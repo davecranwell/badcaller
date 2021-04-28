@@ -1,16 +1,19 @@
 import './Status.css'
 
-function Status({ disconnected, connectionError }) {
-  if (!disconnected && !connectionError) return null
+function Status({ connected, disconnected, connectionError }) {
+  if (connected && !disconnected && !connectionError) return null
 
   return (
     <div className="status">
       <div>
-        {connectionError &&
-          'Could not connect to phone line monitor (Raspberry Pi)'}
+        {!connected &&
+          !connectionError &&
+          !disconnected &&
+          'Connecting to phone line monitor (Raspberry Pi)'}
       </div>
       <div>
-        {disconnected && 'Connection lost to phone line monitor (Raspberry Pi)'}
+        {(connectionError || disconnected) &&
+          'Unable to connect to phone line monitor (Raspberry Pi)'}
       </div>
     </div>
   )

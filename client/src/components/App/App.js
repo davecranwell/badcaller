@@ -16,17 +16,20 @@ function reducer(state, action) {
     case 'CONNECT':
       return {
         ...state,
+        connected: true,
         connectionError: false,
         disconnected: false,
       }
     case 'CONNECT_ERROR':
       return {
         ...state,
+        connected: false,
         connectionError: true,
       }
     case 'DISCONNECTED':
       return {
         ...state,
+        connected: false,
         disconnected: true,
       }
     case 'RING':
@@ -58,6 +61,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {
+    connected: false,
     callActive: false,
     number: undefined,
     rating: undefined,
@@ -84,11 +88,12 @@ function App() {
     return () => socket.disconnect()
   }, [])
 
-  const { disconnected, connectionError } = state
+  const { connected, disconnected, connectionError } = state
 
   return (
     <div className="app">
       <Status
+        connected={connected}
         disconnected={disconnected}
         connectionError={connectionError}
       ></Status>
