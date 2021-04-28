@@ -5,7 +5,7 @@ import app from './app'
 import makeLogger from './logger'
 import makeSerialConnection from './lib/serialInterface'
 
-import makeStateMachine from './stateMachine'
+import makeStateMachine, { SerialEvent } from './stateMachine'
 
 const logger = makeLogger('index')
 
@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
 
 // send serial port events to statemachine
 const serialPort = makeSerialConnection({
-  onData: async (data: string) => {
+  onData: async (data: SerialEvent) => {
     stateMachine.send(data)
   },
 })
@@ -51,14 +51,6 @@ if (process.env.NODE_ENV !== 'production') {
   setTimeout(() => {
     stateMachine.send({ type: 'RING' })
   }, 2000)
-
-  setTimeout(() => {
-    stateMachine.send('')
-  }, 3000)
-
-  setTimeout(() => {
-    stateMachine.send('')
-  }, 4000)
 
   setTimeout(() => {
     stateMachine.send({ type: 'RING' })

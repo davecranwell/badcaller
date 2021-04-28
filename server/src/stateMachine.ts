@@ -1,10 +1,4 @@
-import {
-  Machine,
-  DoneEventObject,
-  AnyEventObject,
-  assign,
-  interpret,
-} from 'xstate'
+import { Machine, DoneEventObject, assign, interpret } from 'xstate'
 import { Server } from 'socket.io'
 import SerialPort from 'serialport'
 
@@ -13,38 +7,36 @@ import makeLogger from './logger'
 
 const logger = makeLogger('stateMachine')
 
-export interface StateMachineEventData extends AnyEventObject {
-  type: string
-  data?: string
-}
-
 type SerialModemContext = {
-  number?: string
+  testNumber?: string
   rating?: string
   timeout: number
 }
 
-const translateEvent = (event: DoneEventObject): StateMachineEventData => {
+export type SerialEvent =
+  | { type: 'RING' }
+  | { type: 'NMBR'; data?: string }
+  | { type: 'DATE'; data?: string }
+  | { type: 'TIME'; data?: string }
+  | { type: 'NOT_RINGING' }
+
+const translateEvent = (event: DoneEventObject): SerialEvent => {
   const { type, data } = event
   return {
     type: type.includes('done.invoke.')
-      ? event.type.replace('done.invoke.', '')
-      : type,
+      ? <SerialEvent['type']>event.type.replace('done.invoke.', '')
+      : <SerialEvent['type']>type,
     data,
   }
 }
 
 export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
-  const serialModemMachine = Machine<
-    SerialModemContext,
-    any,
-    StateMachineEventData
-  >(
+  const serialModemMachine = Machine<SerialModemContext, any, SerialEvent>(
     {
       id: 'serialModem',
       initial: 'idle',
       context: {
-        number: undefined,
+        testNumber: undefined,
         rating: undefined,
         timeout: 5,
       },
@@ -82,7 +74,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
                 NMBR: {
                   target: 'lookingUp',
                   actions: assign({
-                    number: (context, event) => event.data,
+                    testNumber: (context, event) => event.data,
                   }),
                 },
               },
@@ -91,7 +83,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               entry: ['socketIoUpdate', 'log'],
               invoke: {
                 id: 'LOOKEDUP',
-                src: (context, event) => lookupNumber(context.number!),
+                src: (context, event) => lookupNumber(context.testNumber!),
                 onDone: {
                   target: 'success',
                   actions: assign({ rating: (context, event) => event.data }),
