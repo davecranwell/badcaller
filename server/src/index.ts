@@ -1,17 +1,11 @@
 import config from 'config'
 import { Server as SocketServer } from 'socket.io'
-import { Event, AnyEventObject } from 'xstate'
 
 import app from './app'
 import makeLogger from './logger'
 import makeSerialConnection from './lib/serialInterface'
 
-import makeStateMachine from './stateMachine'
-
-interface StateMachineEventData extends AnyEventObject {
-  type: string
-  val?: string
-}
+import makeStateMachine, { StateMachineEventData } from './stateMachine'
 
 const logger = makeLogger('index')
 
@@ -31,16 +25,7 @@ io.on('connection', (socket) => {
 // send serial port events to statemachine
 const serialPort = makeSerialConnection({
   onData: async (data: string) => {
-    // format serial data nicer
-    const stateData: StateMachineEventData = data.includes('=')
-      ? {
-          type: data.split('=').shift()!.trim(),
-          val: data.split('=').pop()?.trim(),
-        }
-      : { type: data.trim() }
-
-    logger.trace(stateData)
-    stateMachine.send(stateData)
+    stateMachine.send(data)
   },
 })
 
@@ -64,18 +49,18 @@ if (process.env.NODE_ENV !== 'production') {
   }, 2000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'NUMB', data: '123' })
+    stateMachine.send('')
+  }, 3000)
+
+  setTimeout(() => {
+    stateMachine.send('')
   }, 4000)
 
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 4000)
+  setTimeout(() => {
+    stateMachine.send({ type: 'RING', data: 'bar' })
+  }, 5000)
 
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 5000)
-
-  // setTimeout(() => {
-  //   serialModemMService.send('RING')
-  // }, 6000)
+  setTimeout(() => {
+    stateMachine.send({ type: 'NUMB', data: '123' })
+  }, 6000)
 }

@@ -1,11 +1,22 @@
-import { Machine, DoneEventObject, assign, interpret } from 'xstate'
+import {
+  Machine,
+  DoneEventObject,
+  AnyEventObject,
+  assign,
+  interpret,
+} from 'xstate'
 import { Server } from 'socket.io'
 import SerialPort from 'serialport'
 
 import lookupNumber from './lib/lookupNumber'
 import makeLogger from './logger'
 
-const logger = makeLogger('index')
+const logger = makeLogger('stateMachine')
+
+export interface StateMachineEventData extends AnyEventObject {
+  type: string
+  data?: string
+}
 
 type SerialModemContext = {
   number?: string
@@ -13,7 +24,7 @@ type SerialModemContext = {
   timeout: number
 }
 
-const translateEvent = (event: DoneEventObject) => {
+const translateEvent = (event: DoneEventObject): StateMachineEventData => {
   const { type, data } = event
   return {
     type: type.includes('done.invoke.')
@@ -24,7 +35,11 @@ const translateEvent = (event: DoneEventObject) => {
 }
 
 export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
-  const serialModemMachine = Machine<SerialModemContext>(
+  const serialModemMachine = Machine<
+    SerialModemContext,
+    any,
+    StateMachineEventData
+  >(
     {
       id: 'serialModem',
       initial: 'idle',

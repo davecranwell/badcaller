@@ -3,6 +3,7 @@ import SerialPort from 'serialport'
 import Readline from '@serialport/parser-readline'
 import MockBinding from '@serialport/binding-mock'
 
+import { StateMachineEventData } from '../stateMachine'
 import makeLogger from '../logger'
 
 const logger = makeLogger('serialInterface')
@@ -31,7 +32,22 @@ export default ({ onData }: any) => {
       logger.info('Enabled CallerID')
     })
   })
-  parser.on('data', onData)
+  parser.on('data', (data: string) => {
+    // format modem serial data nicer
+    const newData: StateMachineEventData = data.includes('=')
+      ? {
+          type: data.split('=').shift()!.trim(),
+          data: data.split('=').pop()?.trim(),
+        }
+      : { type: data.trim() }
+
+    // skip empty lines
+    if (!Object.keys(newData).length && !newData.length) {
+      return
+    }
+
+    onData(newData)
+  })
 
   return serialPort
 }
