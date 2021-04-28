@@ -1,6 +1,6 @@
 # Badcaller
 
-A Raspberry Pi-enabled caller ID system which checks incoming landline calls against databases of known malicious callers, and displays a danger rating of the incomming caller on a web interface.
+A Raspberry Pi-enabled caller ID system which checks incoming landline calls against databases (UK-only for now) of known malicious callers, and displays a danger rating of the incomming caller on a web browser.
 
 ## Hardware requirements
 
@@ -9,7 +9,7 @@ A Raspberry Pi-enabled caller ID system which checks incoming landline calls aga
    - Raspberry Pi <2 & Raspberry Pi Zero not tested
    - Memory requirements unknown, but 1GB has proven sufficient
 
-2. A USB Serial modem with line in/out such as [this one on amazon](https://www.amazon.co.uk/gp/product/B016MXLCEQ/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1)
+2. A USB Serial modem with Caller ID support and a line in/out such as [this one on amazon](https://www.amazon.co.uk/gp/product/B016MXLCEQ/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1)
 
 ## Running on your Raspberry Pi
 
@@ -49,16 +49,22 @@ Watchtower will keep the Badcaller container up to date whenever you run docker-
 
 # Todo
 
-- deno?
+- A way to support multiple and/or country-specific phone number lookup websites
 - Better mobile breakpoint font support
+- Add support for toggling modem into modes to support country-specific FSK/DTMF spec.
 - Perhaps some way of forcibly hanging up calls that are detected as dangerous
 - Attempting to dial out during a call, to detect a busy line and therefore keep the rating report on the screen for the call duration.
 - Better alerting through the favicon so a full page doens't need to be foregrounded all the time to get an idea of the caller.
 - Integirate another means of physical alerting that is more simple/brutal, like a flashing red light.
 - Packaging as a Chrome Extension so it requires no persistence as a web page at all
+- deno?
 
 ---
 
 ### Acknowledgements
 
 https://github.com/kjepper/CallerPi A repo I stumbled across during research that already achieved the crux of what I have here and proved what was possible.
+
+### Support
+
+None.
