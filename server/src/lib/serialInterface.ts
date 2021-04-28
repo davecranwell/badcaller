@@ -33,6 +33,8 @@ export default ({ onData }: any) => {
     })
   })
   parser.on('data', (data: string) => {
+    if(data === '\r') return
+
     // format modem serial data nicer
     const newData: StateMachineEventData = data.includes('=')
       ? {

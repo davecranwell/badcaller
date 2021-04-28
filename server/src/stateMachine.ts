@@ -79,7 +79,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
             awaitingNumber: {
               entry: ['socketIoUpdate', 'log'],
               on: {
-                NUMB: {
+                NMBR: {
                   target: 'lookingUp',
                   actions: assign({
                     number: (context, event) => event.data,
