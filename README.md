@@ -13,6 +13,8 @@ A Raspberry Pi-enabled caller ID system which checks incoming landline calls aga
 
 ## Running on your Raspberry Pi
 
+All the software required is run on your Pi via Docker.
+
 ### Assumptions
 
 - Your Pi was imaged in as vanilla a way as possible, ideally with Raspberry Pi OS (32 bit)
@@ -30,6 +32,7 @@ A Raspberry Pi-enabled caller ID system which checks incoming landline calls aga
    - Docker's [primary installation process for linux](https://docs.docker.com/compose/install/#install-compose-on-linux-systems) didn't work for me. I ended up using: `sudo pip3 install docker-compose`
 
 4. Clone this repo to any location you prefer on your Pi.
+   - You don't need the whole repo if you're not planning to modify the code. Only the `docker-compose.yml` in the root is necessary for running on your Pi.
 5. Run `docker-compose up -d` from the directory created when you checked out this repo.
    - Running with `-d` is important if you want it to continue running when you exit your the Pi's shell
 6. Visit the IP of your Raspberry in a browser tab on a separate computer or phone.
@@ -38,8 +41,24 @@ A Raspberry Pi-enabled caller ID system which checks incoming landline calls aga
    - You should find yourself at a screen indicating that (presumably) your phone line is inactive.
    - Any significant errors should be visible at the top of the page. Hopefully none are visible.
 
-### Keeping your version up to date
+## Keeping your version up to date
 
 The docker-compose file includes [Watchtower](https://containrrr.dev/watchtower/) which will continuously monitor dockerhub for changes and automatically redeploy the newer container version to your Pi, without manual intervention. Feel free to disable this.
 
 Watchtower will keep the Badcaller container up to date whenever you run docker-compose, even if you don't run it in the background.
+
+# Todo
+
+- deno?
+- Better mobile breakpoint font support
+- Perhaps some way of forcibly hanging up calls that are detected as dangerous
+- Attempting to dial out during a call, to detect a busy line and therefore keep the rating report on the screen for the call duration.
+- Better alerting through the favicon so a full page doens't need to be foregrounded all the time to get an idea of the caller.
+- Integirate another means of physical alerting that is more simple/brutal, like a flashing red light.
+- Packaging as a Chrome Extension so it requires no persistence as a web page at all
+
+---
+
+### Acknowledgements
+
+https://github.com/kjepper/CallerPi A repo I stumbled across during research that already achieved the crux of what I have here and proved what was possible.
