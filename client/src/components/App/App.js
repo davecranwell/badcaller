@@ -37,7 +37,7 @@ function reducer(state, action) {
         ...state,
         callActive: true,
       }
-    case 'NUMB':
+    case 'NMBR':
       return {
         ...state,
         number: data,
@@ -55,7 +55,7 @@ function reducer(state, action) {
         rating: undefined,
       }
     default:
-      throw new Error()
+      return state
   }
 }
 

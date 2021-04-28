@@ -5,7 +5,7 @@ import app from './app'
 import makeLogger from './logger'
 import makeSerialConnection from './lib/serialInterface'
 
-import makeStateMachine, { StateMachineEventData } from './stateMachine'
+import makeStateMachine from './stateMachine'
 
 const logger = makeLogger('index')
 
@@ -45,7 +45,11 @@ express.on('listening', async () => {
 // Fake effects for development only
 if (process.env.NODE_ENV !== 'production') {
   setTimeout(() => {
-    stateMachine.send({ type: 'RING', data: 'bar' })
+    stateMachine.send({ type: 'RING' })
+  }, 2000)
+
+  setTimeout(() => {
+    stateMachine.send({ type: 'RING' })
   }, 2000)
 
   setTimeout(() => {
@@ -57,10 +61,10 @@ if (process.env.NODE_ENV !== 'production') {
   }, 4000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'RING', data: 'bar' })
+    stateMachine.send({ type: 'RING' })
   }, 5000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'NUMB', data: '123' })
+    stateMachine.send({ type: 'NMBR', data: '123' })
   }, 6000)
 }
