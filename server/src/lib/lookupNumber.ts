@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 import cheerio from 'cheerio'
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = (ms: number): Promise<any> =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
-export default async (number: string) => {
+export default async (number: string): Promise<string | false> => {
   try {
     let data
 

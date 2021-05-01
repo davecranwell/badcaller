@@ -33,8 +33,9 @@ export default ({ onData }: { onData: Function }) => {
   parser.on('data', (data: string): void => {
     if (data === '\r' || !data.trim().length) return
 
-    const type = data.split('=').shift()!.trim()
-    const serialData = data.split('=').pop()?.trim()
+    const dataArr = data.split('=')
+    const type = dataArr.shift()!.trim()
+    const serialData = dataArr.pop()?.trim()
 
     const newData: SerialEvent = data.includes('=')
       ? { type: <SerialEvent['type']>type, data: serialData }
