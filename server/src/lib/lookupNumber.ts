@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 import cheerio from 'cheerio'
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export default async (number: string) => {
   try {
     let data
@@ -16,6 +18,8 @@ export default async (number: string) => {
           <div class="dataColumn">ABC</div>
         </div>
       </html>`
+
+      await delay(1000)
     }
 
     const $ = cheerio.load(data)
