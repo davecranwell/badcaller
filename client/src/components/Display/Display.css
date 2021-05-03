@@ -1,7 +1,8 @@
 .display {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  width: calc(100vw - 4rem);
+  padding: 0 2rem;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -52,7 +53,7 @@
 .display .rating-label {
   text-transform: uppercase;
   font-weight: normal;
-  font-size: 1.6vw;
+  font-size: 1.4rem;
   line-height: 1;
   opacity: 0.8;
   margin: 0;
@@ -63,15 +64,6 @@
 .display .incoming-call-number,
 .display .rating-score {
   display: block;
-}
-
-.display .incoming-call-label,
-.display .rating-label {
-  text-transform: uppercase;
-  font-weight: normal;
-  font-size: 1.6vw;
-  line-height: 1;
-  opacity: 0.8;
 }
 
 .display .incoming-call-number,
@@ -85,8 +77,8 @@
 .display .incoming-call-number .spinner,
 .display .rating-score .spinner {
   position: absolute;
-  width: 4.6vw;
-  height: 4.6vw;
+  width: 3rem;
+  height: 3rem;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -103,7 +95,7 @@
 }
 
 .display .rating-score {
-  font-size: 6vw;
-  min-height: 6vw;
+  font-size: 13vw;
+  min-height: 13vw;
   line-height: 1;
 }
