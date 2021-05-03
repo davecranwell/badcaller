@@ -10,6 +10,11 @@ services:
       - 80
     devices:
       - '/dev/ttyACM0:/dev/ttyACM0'
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: 5
+        max-size: 10m
   watchtower:
     image: v2tec/watchtower:armhf-latest
     restart: always
