@@ -50,13 +50,17 @@ if (process.env.NODE_ENV !== 'production') {
 
   setTimeout(() => {
     stateMachine.send({ type: 'RING' })
-  }, 2000)
+  }, 4000)
 
   setTimeout(() => {
     stateMachine.send({ type: 'RING' })
-  }, 5000)
+  }, 6000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'NMBR', data: '01425770238' })
-  }, 6000)
+    stateMachine.send({ type: 'NMBR', data: '0154270238' })
+  }, 6500)
+
+  setTimeout(() => {
+    stateMachine.send({ type: 'RING' })
+  }, 8000)
 }

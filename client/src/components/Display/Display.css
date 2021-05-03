@@ -8,10 +8,11 @@
   flex-direction: column;
   color: #333;
   background: radial-gradient(
-    ellipse at bottom,
-    rgba(0, 0, 0, 0.45),
-    transparent
-  );
+      100vw 40vh at bottom,
+      rgba(0, 0, 0, 0.2),
+      transparent
+    ),
+    radial-gradient(100vw 40vh at top, rgba(0, 0, 0, 0.2), transparent);
 }
 
 .display--callactive {
@@ -43,11 +44,6 @@
   text-shadow: 1px 1px rgba(255, 255, 255, 0.4);
 }
 
-.display--callinactive .spinner circle,
-.display--callinactive .spinner circle {
-  color: #333;
-}
-
 .display .idle-label,
 .display .incoming-call-label,
 .display .rating-label {
@@ -77,8 +73,9 @@
 .display .incoming-call-number .spinner,
 .display .rating-score .spinner {
   position: absolute;
-  width: 3rem;
-  height: 3rem;
+  color: #ccc;
+  width: 8vw;
+  height: 8vw;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -89,13 +86,13 @@
 }
 
 .display .incoming-call-number {
-  font-size: 10vw;
+  font-size: calc(100vw / var(--number-length) * 1.2);
   min-height: 10vw;
   line-height: 1;
 }
 
 .display .rating-score {
-  font-size: 13vw;
-  min-height: 13vw;
+  font-size: calc(100vw / var(--number-length) * 1.5);
+  min-height: 12vw;
   line-height: 1;
 }

@@ -16,16 +16,24 @@ function Display({ callActive, number, rating }) {
             <span className="incoming-call-label">
               {callActive && 'Incoming call from'}
             </span>
-            <span className="incoming-call-number">
+            <span
+              className="incoming-call-number"
+              style={{ '--number-length': (number && number.length) || 0 }}
+            >
               {number || ''} {!number && <Spinner />}
             </span>
           </h1>
-          <h2 className="rating">
-            <span className="rating-label">{callActive && 'Rated as'}</span>
-            <span className="rating-score">
-              {rating} {!rating && <Spinner />}
-            </span>
-          </h2>
+          {number && (
+            <h2 className="rating">
+              <span className="rating-label">{callActive && 'Rated as'}</span>
+              <span
+                className="rating-score"
+                style={{ '--number-length': (number && number.length) || 0 }}
+              >
+                {rating} {!rating && <Spinner />}
+              </span>
+            </h2>
+          )}
         </>
       )}
 
