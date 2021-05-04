@@ -1,6 +1,6 @@
 .display {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: calc(100vw - 4rem);
   padding: 0 2rem;
   align-items: center;
