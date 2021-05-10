@@ -1,7 +1,7 @@
 .spinner svg {
   animation: 2s linear infinite svg-animation;
-  max-width: 100px;
-  display: block;
+  width: 50%;
+  height: 50%;
 }
 
 @keyframes svg-animation {

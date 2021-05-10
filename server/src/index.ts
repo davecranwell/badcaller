@@ -18,8 +18,9 @@ const io = new SocketServer(express, {
 
 io.on('connection', (socket) => {
   logger.info('Client socket connected')
-  io.emit('currentstate', stateMachine.state.context)
-  socket.emit('hello', 'world')
+  io.emit('message', {
+    ...stateMachine.state.context,
+  })
 })
 
 // send serial port events to statemachine

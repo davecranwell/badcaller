@@ -8,7 +8,8 @@ import makeLogger from './logger'
 const logger = makeLogger('stateMachine')
 
 type SerialModemContext = {
-  testNumber?: string
+  ringing?: boolean
+  number?: string
   rating?: string
   timeout: number
 }
@@ -20,31 +21,27 @@ export type SerialEvent =
   | { type: 'TIME'; data?: string }
   | { type: 'NOT_RINGING' }
 
-const translateEvent = (event: DoneEventObject): SerialEvent => {
-  const { type, data } = event
-  return {
-    type: type.includes('done.invoke.')
-      ? <SerialEvent['type']>event.type.replace('done.invoke.', '')
-      : <SerialEvent['type']>type,
-    data,
-  }
-}
-
 export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
   const serialModemMachine = Machine<SerialModemContext, any, SerialEvent>(
     {
       id: 'serialModem',
       initial: 'idle',
       context: {
-        testNumber: undefined,
+        ringing: false,
+        number: undefined,
         rating: undefined,
-        timeout: 5,
+        timeout: 10,
       },
       states: {
         idle: {
           entry: ['socketIoUpdate', 'log'],
           on: {
-            RING: 'ringing',
+            RING: {
+              target: 'ringing',
+              actions: assign((context, event) => ({
+                ringing: true,
+              })),
+            },
           },
         },
         ringing: {
@@ -63,8 +60,17 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
             },
           },
           on: {
-            RING: 'ringing',
-            NOT_RINGING: 'idle',
+            RING: {
+              target: 'ringing',
+            },
+            NOT_RINGING: {
+              target: 'idle',
+              actions: assign((context, event) => ({
+                number: undefined,
+                rating: undefined,
+                ringing: false,
+              })),
+            },
           },
           states: {
             reset: {},
@@ -74,7 +80,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
                 NMBR: {
                   target: 'lookingUp',
                   actions: assign({
-                    testNumber: (context, event) => event.data,
+                    number: (context, event) => event.data,
                   }),
                 },
               },
@@ -83,7 +89,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               entry: ['socketIoUpdate', 'log'],
               invoke: {
                 id: 'LOOKEDUP',
-                src: (context, event) => lookupNumber(context.testNumber!),
+                src: (context, event) => lookupNumber(context.number!),
                 onDone: {
                   target: 'success',
                   actions: assign({ rating: (context, event) => event.data }),
@@ -107,7 +113,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
     {
       actions: {
         socketIoUpdate: (context, event) => {
-          io.emit('message', translateEvent(event))
+          io.emit('message', context)
         },
         log: (context, event) => {
           const logitem = {

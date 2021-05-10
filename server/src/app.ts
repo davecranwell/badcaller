@@ -19,7 +19,7 @@ app.use(
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         objectSrc: ["'self'"],
         mediaSrc: ["'self'"],
-        frameSrc: ["'self'", 'ourDomain.us.auth0.com'],
+        frameSrc: ["'self'"],
       },
     },
   })

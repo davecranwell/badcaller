@@ -2,19 +2,19 @@ import Spinner from '../Spinner/Spinner'
 
 import './Display.css'
 
-function Display({ callActive, number, rating }) {
+function Display({ ringing, number, rating }) {
   return (
     <div
       className={`
-        display ${rating ? `display--${rating}` : ''} 
-        ${`display--${callActive ? 'callactive' : 'callinactive'}`}
+        display ${rating && ringing ? `display--${rating}` : ''} 
+        ${`display--${ringing ? 'callactive' : 'callinactive'}`}
       `}
     >
-      {callActive && (
+      {ringing && (
         <>
           <h1 className="incoming-call">
             <span className="incoming-call-label">
-              {callActive && 'Incoming call from'}
+              {ringing && 'Incoming call from'}
             </span>
             <span
               className="incoming-call-number"
@@ -25,7 +25,7 @@ function Display({ callActive, number, rating }) {
           </h1>
           {number && (
             <h2 className="rating">
-              <span className="rating-label">{callActive && 'Rated as'}</span>
+              <span className="rating-label">{ringing && 'Rated as'}</span>
               <span
                 className="rating-score"
                 style={{ '--number-length': (number && number.length) || 0 }}
@@ -37,7 +37,7 @@ function Display({ callActive, number, rating }) {
         </>
       )}
 
-      {!callActive && <h1 className="idle-label">No call currently active</h1>}
+      {!ringing && <h1 className="idle-label">No call currently active</h1>}
     </div>
   )
 }
