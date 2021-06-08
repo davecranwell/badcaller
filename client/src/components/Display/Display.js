@@ -4,12 +4,7 @@ import './Display.css'
 
 function Display({ ringing, number, rating }) {
   return (
-    <div
-      className={`
-        display ${rating && ringing ? `display--${rating}` : ''} 
-        ${`display--${ringing ? 'callactive' : 'callinactive'}`}
-      `}
-    >
+    <div className={'display'}>
       {ringing && (
         <>
           <h1 className="incoming-call">

@@ -1,6 +1,65 @@
 .app {
-  text-align: center;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100vw;
+  align-items: stretch;
+  justify-content: center;
+  color: #333;
+  background: radial-gradient(
+      100vw 40vh at bottom,
+      rgba(0, 0, 0, 0.2),
+      transparent
+    ),
+    radial-gradient(100vw 40vh at top, rgba(0, 0, 0, 0.2), transparent);
+  overflow: hidden;
+}
+
+@media (orientation: portrait) {
+  main {
+    flex-direction: column;
+  }
+}
+
+.logo {
+  width: clamp(100px, 20vw, 150px);
+  position: absolute;
+  margin: 1rem;
+}
+
+.state--callactive {
+  color: #333;
+}
+
+.state--dangerous {
+  background-color: #c9323b;
+  color: #fff;
+}
+
+.state--negative,
+.state--harassing {
+  background-color: #e96034;
+  color: #fff;
+}
+
+.state--neutral {
+  background-color: #666;
+  color: #fff;
+}
+
+.state--safe {
+  background-color: #4a9401;
+  color: #fff;
+}
+
+.state--callinactive .idle-label {
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.4);
 }

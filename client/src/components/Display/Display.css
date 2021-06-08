@@ -1,48 +1,11 @@
 .display {
   display: flex;
   height: 100%;
-  width: calc(100vw - 4rem);
+  width: 100%;
   padding: 0 2rem;
   align-items: stretch;
   justify-content: center;
   flex-direction: column;
-  color: #333;
-  background: radial-gradient(
-      100vw 40vh at bottom,
-      rgba(0, 0, 0, 0.2),
-      transparent
-    ),
-    radial-gradient(100vw 40vh at top, rgba(0, 0, 0, 0.2), transparent);
-  overflow: hidden;
-}
-
-.display--callactive {
-  color: #333;
-}
-
-.display--dangerous {
-  background-color: #c9323b;
-  color: #fff;
-}
-
-.display--negative,
-.display--harassing {
-  background-color: #e96034;
-  color: #fff;
-}
-
-.display--neutral {
-  background-color: #666;
-  color: #fff;
-}
-
-.display--safe {
-  background-color: #4a9401;
-  color: #fff;
-}
-
-.display--callinactive .idle-label {
-  text-shadow: 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 .display .idle-label,
@@ -52,8 +15,13 @@
   font-weight: normal;
   font-size: 1.4rem;
   line-height: 1;
-  opacity: 0.8;
+  opacity: 0.7;
   margin: 0;
+}
+
+.display .idle-label {
+  opacity: 0.4;
+  text-align: center;
 }
 
 .display .incoming-call-label,
@@ -65,11 +33,10 @@
 
 .display .incoming-call-number,
 .display .rating-score {
-  text-align: center;
+  font-weight: 500;
   text-transform: capitalize;
   display: block;
   position: relative;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .display .incoming-call-number .spinner,
@@ -87,18 +54,14 @@
   justify-content: center;
 }
 
-.display .incoming-call {
-  margin: 0;
-}
-
 .display .incoming-call-number {
-  font-size: calc(100vw / var(--number-length) * 1.2);
+  font-size: calc(80vw / var(--number-length) * 1.2);
   min-height: 10vw;
   line-height: 1;
 }
 
 .display .rating-score {
-  font-size: calc(100vw / var(--number-length) * 1.5);
-  min-height: 12vw;
+  font-size: calc(80vw / var(--number-length) * 1.5);
+  min-height: 10vw;
   line-height: 1;
 }

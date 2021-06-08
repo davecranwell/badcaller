@@ -18,7 +18,7 @@ const io = new SocketServer(express, {
 
 io.on('connection', (socket) => {
   logger.info('Client socket connected')
-  io.emit('message', {
+  io.emit('progress', {
     ...stateMachine.state.context,
   })
 })

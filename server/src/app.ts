@@ -34,8 +34,12 @@ app.use(
   express.static(path.join(__dirname, '..', '..', 'client', 'build'))
 )
 
-app.get('/static', function (req, res) {
+app.get('/static', (req, res) => {
   express.static(path.join(__dirname, '..', '..', 'client', 'build', 'static'))
+})
+
+app.get('/ping', (req, res) => {
+  return res.json({ message: 'pong' })
 })
 
 app.use('/api', api)

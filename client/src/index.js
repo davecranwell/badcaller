@@ -4,7 +4,11 @@ import ReactDOM from 'react-dom'
 import App from './components/App/App'
 import reportWebVitals from './reportWebVitals'
 
+import socket from './services/socket'
+
 import './index.css'
+
+socket.open()
 
 ReactDOM.render(
   <React.StrictMode>

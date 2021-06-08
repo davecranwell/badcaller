@@ -1,42 +1,45 @@
-import { useReducer, useEffect } from 'react'
-import socketio from 'socket.io-client'
+import { useReducer } from 'react'
 
+import { useSocketEffect } from '../../utils'
+
+import Head from '../Head'
 import Display from '../Display/Display'
 import Status from '../Status/Status'
+import History from '../History/History'
+import HistoryList from '../History/HistoryList'
+
+import { ReactComponent as Logo } from '../../badcaller-logo.svg'
 
 import './App.css'
-
-// eslint-disable-next-line
-const { socketUrl } = CONFIG
 
 function reducer(state, action) {
   const { type, data } = action
 
   switch (type) {
-    case 'connect':
+    case 'setCalls':
       return {
         ...state,
-        connected: true,
-        connectionError: false,
-        disconnected: false,
+        calls: data,
       }
-    case 'connectError':
-      return {
-        ...state,
-        connected: false,
-        connectionError: true,
+    case 'result':
+      if (data.number && data.rating) {
+        return {
+          ...data,
+          calls: [
+            {
+              timestamp: Date.now(),
+              number: data.number,
+              rating: data.rating,
+            },
+            // Remove the last item from the previous calls array
+            ...state.calls.slice(0, state.calls.length - 1),
+          ],
+        }
       }
-    case 'disconnected':
+      break
+    case 'progress':
       return {
-        ...state,
-        connected: false,
-        disconnected: true,
-      }
-    case 'message':
-      return {
-        connected: state.connected,
-        connectionError: state.connectionError,
-        disconnected: state.disconnected,
+        calls: state.calls,
         ...data,
       }
     default:
@@ -46,67 +49,42 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {
-    connected: false,
+    calls: [],
     ringing: false,
     number: undefined,
     rating: undefined,
-    connectionError: false,
-    disconnected: false,
   })
 
-  const { ringing, rating, connected, disconnected, connectionError } = state
+  useSocketEffect({
+    progress: (data) => dispatch({ type: 'progress', data }),
+    result: (data) => dispatch({ type: 'result', data }),
+  })
 
-  useEffect(() => {
-    document.title = `
-      ${rating ? `${rating} | ` : ''}
-      Badcaller
-    `
-    const favicon = document.getElementById('favicon')
-
-    const ratingColors = {
-      dangerous: 'c9323b',
-      harrassing: 'e96034',
-      negative: 'e96034',
-      neutral: '666',
-      safe: '4a9401',
-    }
-
-    const faviconColor = ratingColors[rating] || '000'
-
-    favicon.href = `data:image/svg+xml,${encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#fff"/><path fill="#${faviconColor}" d="M59.9 27.6A30 30 0 10.1 32.5a30 30 0 0059.8-5zM48 43l-2.2 2.3a10.6 10.6 0 01-5 2.8 16 16 0 01-4 0c-3.2-.4-6.2-1.5-8.8-3.4a45.5 45.5 0 01-6.8-5.8l-1.5-1.6c-4.5-4.8-9.4-11.8-7.8-18a10 10 0 012.9-5L17 12a1.5 1.5 0 011.2-.4c.2 0 .4 0 .5.2l4.4 4.4a3.7 3.7 0 010 5.3l-.8.8A4 4 0 0021 25c0 .9.7 2.6.7 2.6 3 4.5 7 8.4 11.6 11.3a3.2 3.2 0 003.8-.4l1.3-1.4a3.7 3.7 0 015.3 0l4.4 4.5.2.4a1.5 1.5 0 01-.4 1.2z"/></svg>`
-    )}`
-  }, [ringing, rating])
-
-  useEffect(() => {
-    const socket = socketio(socketUrl)
-
-    socket.on('message', (data) => {
-      dispatch({ type: 'message', data })
-    })
-    socket.on('connect', (err) => {
-      dispatch({ type: 'connect' })
-    })
-    socket.on('connect_error', (err) => {
-      dispatch({ type: 'connectError' })
-    })
-    socket.on('disconnected', (err) => {
-      dispatch({ type: 'disconnected' })
-    })
-
-    return () => socket.disconnect()
-  }, [])
+  const { ringing, number, rating, calls } = state
 
   return (
-    <div className="app">
-      <Status
-        connected={connected}
-        disconnected={disconnected}
-        connectionError={connectionError}
-      ></Status>
+    <>
+      <Logo className={'logo'} />
+      <div className="app">
+        <Head ringing={ringing} rating={rating} />
+        <Status />
 
-      <Display {...state} />
-    </div>
+        <main
+          className={`
+          ${rating && ringing ? `state--${rating}` : ''} 
+          ${`state--${ringing ? 'callactive' : 'callinactive'}`}
+        `}
+        >
+          <Display ringing={ringing} number={number} rating={rating} />
+          <History>
+            <HistoryList
+              calls={calls}
+              onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
+            />
+          </History>
+        </main>
+      </div>
+    </>
   )
 }
 

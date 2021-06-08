@@ -1,12 +1,25 @@
 import express, { Request, Response } from 'express'
-import { body, validationResult } from 'express-validator'
-import makeLogger from './logger'
 
-const logger = makeLogger('api')
+import { callsDB } from './database'
+
 const router = express.Router()
 
-router.get('/ping', (req, res) => {
-  return res
+interface CallQuery {
+  $sort?: object
+  $limit?: number
+}
+
+router.get('/calls', (req, res) => {
+  const { query }: { query: CallQuery } = req
+  const { $sort, $limit, ...generalQuery } = query
+
+  const search = callsDB.find(generalQuery).sort($sort)
+
+  if ($limit) search.limit($limit)
+
+  search.exec((err, docs) => {
+    return res.json(docs)
+  })
 })
 
 export default router

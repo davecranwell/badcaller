@@ -14,7 +14,7 @@ export default async (number: string): Promise<string | false> => {
     } else {
       data = `<html>
         <div class="numberDetails">
-          <div class="dataColumn"> Negative </div>
+          <div class="dataColumn"> Dangerous </div>
           <div class="dataColumn">123</div>
           <div class="dataColumn">ABC</div>
         </div>

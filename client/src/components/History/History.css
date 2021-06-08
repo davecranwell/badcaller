@@ -1,0 +1,70 @@
+.history {
+  align-self: center;
+  justify-content: center;
+  text-align: left;
+  padding: 30px clamp(20px, 3vw, 50px);
+  font-size: 0.8rem;
+  width: clamp(310px, 20vw, 500px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.history--inverse {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (orientation: portrait) {
+  .history {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 0;
+    padding: 2rem;
+  }
+
+  .history--inverse {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.history-title {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 1.2em;
+  line-height: 1;
+  opacity: 0.7;
+  margin: 0 0 1rem 0;
+}
+
+.history-list,
+.history-list-item {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history-list-item {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+}
+
+.history--inverse .history-list-item {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.history-list-item--date {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85em;
+}
+
+.history--inverse .history-list-item--date {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.history-list-item--number {
+  font-weight: 500;
+}
+.history-list-item--rating {
+  text-transform: capitalize;
+}

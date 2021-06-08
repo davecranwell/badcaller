@@ -5,6 +5,8 @@ import SerialPort from 'serialport'
 import lookupNumber from './lib/lookupNumber'
 import makeLogger from './logger'
 
+import { callsDB } from './database'
+
 const logger = makeLogger('stateMachine')
 
 type SerialModemContext = {
@@ -34,7 +36,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
       },
       states: {
         idle: {
-          entry: ['socketIoUpdate', 'log'],
+          entry: ['socketIoProgress', 'log'],
           on: {
             RING: {
               target: 'ringing',
@@ -46,7 +48,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
         },
         ringing: {
           initial: 'awaitingNumber',
-          entry: ['socketIoUpdate', 'log'],
+          entry: ['socketIoProgress', 'log'],
           invoke: {
             id: 'ringTimeout',
             src: (context) => (cb) => {
@@ -75,7 +77,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
           states: {
             reset: {},
             awaitingNumber: {
-              entry: ['socketIoUpdate', 'log'],
+              entry: ['socketIoProgress', 'log'],
               on: {
                 NMBR: {
                   target: 'lookingUp',
@@ -86,7 +88,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               },
             },
             lookingUp: {
-              entry: ['socketIoUpdate', 'log'],
+              entry: ['socketIoProgress', 'log'],
               invoke: {
                 id: 'LOOKEDUP',
                 src: (context, event) => lookupNumber(context.number!),
@@ -101,10 +103,13 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
               },
             },
             success: {
-              entry: ['socketIoUpdate', 'log'],
+              entry: ['socketIoResult', 'log'],
+              invoke: {
+                src: 'saveCall',
+              },
             },
             failure: {
-              entry: ['socketIoUpdate', 'log'],
+              entry: ['socketIoProgress', 'log'],
             },
           },
         },
@@ -112,8 +117,11 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
     },
     {
       actions: {
-        socketIoUpdate: (context, event) => {
-          io.emit('message', context)
+        socketIoProgress: (context, event) => {
+          io.emit('progress', context)
+        },
+        socketIoResult: (context, event) => {
+          io.emit('result', context)
         },
         log: (context, event) => {
           const logitem = {
@@ -122,6 +130,15 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
           }
 
           logger.trace(JSON.stringify(logitem))
+        },
+      },
+      services: {
+        saveCall: (context, event) => {
+          return callsDB.asyncInsert({
+            timestamp: Date.now(),
+            number: context.number as string,
+            rating: context.rating as string,
+          })
         },
       },
     }
