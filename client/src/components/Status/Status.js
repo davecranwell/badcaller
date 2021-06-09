@@ -3,7 +3,7 @@ import classnames from 'classnames'
 
 import { useSocketEffect } from '../../utils'
 
-import styles from './Status.module.scss'
+import styles from './Status.module.css'
 
 function reducer(state, action) {
   const { type } = action
