@@ -1,5 +1,5 @@
 
-🚨 LOOKING FOR HELP! If you're in a non-UK country I'd really appreciate your help testing modem behaviour and settings with different caller ID transmission formats e.g FSK/DTMF
+🚨 **LOOKING FOR HELP! If you're in a non-UK country I'd really appreciate your help testing modem behaviour and settings with different caller ID transmission formats e.g FSK/DTMF** 🚨
 
 # Badcaller
 
