@@ -6,3 +6,4 @@ server/node_modules
 server/build
 server/test
 server/*.db
+extension

@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 
 import { useSocketEffect } from '../../utils'
 
@@ -55,7 +55,10 @@ function App() {
     rating: undefined,
   })
 
+  const [connected, setConnected] = useState(false)
+
   useSocketEffect({
+    connect: () => setConnected(true),
     progress: (data) => dispatch({ type: 'progress', data }),
     result: (data) => dispatch({ type: 'result', data }),
   })
@@ -76,7 +79,7 @@ function App() {
         `}
         >
           <Display ringing={ringing} number={number} rating={rating} />
-          <History>
+          <History connected={connected}>
             <HistoryList
               calls={calls}
               onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
