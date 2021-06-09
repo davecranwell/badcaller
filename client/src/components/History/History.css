@@ -19,7 +19,7 @@
     width: 100%;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 0;
-    padding: 2rem;
+    padding: 20px;
   }
 
   .history--inverse {
@@ -67,4 +67,9 @@
 }
 .history-list-item--rating {
   text-transform: capitalize;
+}
+
+.history .spinner {
+  width: 4vw;
+  height: 4vw;
 }

@@ -1,8 +1,9 @@
 import { useReducer } from 'react'
+import classnames from 'classnames'
 
 import { useSocketEffect } from '../../utils'
 
-import './Status.css'
+import styles from './Status.module.scss'
 
 function reducer(state, action) {
   const { type } = action
@@ -49,15 +50,19 @@ function Status() {
 
   if (connected && !disconnected && !connectionError) return null
 
-  return (
-    <div className="status">
-      {!connected &&
-        !connectionError &&
-        !disconnected &&
-        'Connecting to phone line monitor (Raspberry Pi)'}
+  const isFirstConnection = !connected && !connectionError && !disconnected
+  const isOnError = connectionError || disconnected
 
-      {(connectionError || disconnected) &&
-        'Unable to connect to phone line monitor (Raspberry Pi)'}
+  return (
+    <div
+      className={classnames(styles.status, {
+        [styles['status--info']]: isFirstConnection,
+        [styles['status--error']]: isOnError,
+      })}
+    >
+      {isFirstConnection && 'Connecting to phone line monitor (Raspberry Pi)'}
+
+      {isOnError && 'Unable to connect to phone line monitor (Raspberry Pi)'}
     </div>
   )
 }

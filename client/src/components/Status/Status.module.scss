@@ -1,0 +1,15 @@
+.status {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  padding: 10px 20px;
+
+  &--info {
+    background-color: #dce1f5;
+  }
+
+  &--error {
+    background-color: #ff8484;
+  }
+}
