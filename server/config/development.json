@@ -1,5 +1,6 @@
 {
   "port": 8080,
   "loggingLevel": "trace",
-  "serialPort": "/dev/ROBOT"
+  "serialPort": "/dev/ROBOT",
+  "dbDir": "../db"
 }

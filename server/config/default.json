@@ -1,5 +1,6 @@
 {
   "port": 8080,
   "loggingLevel": "info",
-  "serialPort": "/dev/ttyACM0"
+  "serialPort": "/dev/ttyACM0",
+  "dbDir": "/app/db"
 }

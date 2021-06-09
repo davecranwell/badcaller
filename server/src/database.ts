@@ -1,4 +1,5 @@
 import AsyncNedb from 'nedb-async'
+import config from 'config'
 
 interface Call {
   timestamp: number
@@ -7,7 +8,7 @@ interface Call {
 }
 
 export const callsDB = new AsyncNedb<Call>({
-  filename: './calls.db',
+  filename: `${config.get('dbDir')}/calls.db`,
   autoload: true,
 })
 
