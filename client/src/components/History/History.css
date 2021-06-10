@@ -55,7 +55,8 @@
 
 .history-list-item--date {
   color: rgba(255, 255, 255, 0.5);
-  font-size: 0.85em;
+  font-size: 0.7em;
+  text-transform: uppercase;
 }
 
 .history--inverse .history-list-item--date {
@@ -67,6 +68,27 @@
 }
 .history-list-item--rating {
   text-transform: capitalize;
+}
+
+@media (orientation: portrait) {
+  .history-list-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .history-list-item--date,
+  .history-list-item--number,
+  .history-list-item--rating {
+    font-size: inherit;
+  }
+
+  .history-list-item > div:not(:last-of-type) {
+    margin-right: 1rem;
+  }
+
+  .history-list-item--date {
+    text-transform: none;
+  }
 }
 
 .history .spinner {

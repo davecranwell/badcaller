@@ -4,10 +4,10 @@ import IsLoadingHoc from '../IsLoadingHoc'
 
 import { getLatestCalls } from '../../services/calls'
 
-function HistoryList({ onFetchCalls, calls, setLoading }) {
+function HistoryList({ displayNumber, onFetchCalls, calls, setLoading }) {
   useEffect(() => {
     setLoading(true)
-    getLatestCalls(5).then((dataCalls) => {
+    getLatestCalls(displayNumber).then((dataCalls) => {
       onFetchCalls(dataCalls)
       setLoading(false)
     })
