@@ -12,6 +12,8 @@ import { ReactComponent as Logo } from '../../badcaller-logo.svg'
 
 import './App.css'
 
+const NUMBER_HISTORY_ITEMS = 5
+
 function reducer(state, action) {
   const { type, data } = action
 
@@ -23,6 +25,13 @@ function reducer(state, action) {
       }
     case 'result':
       if (data.number && data.rating) {
+        const newCalls =
+          // Remove the last item from the previous calls array if the history
+          // is already at max allowed length
+          state.calls.length >= NUMBER_HISTORY_ITEMS
+            ? [...state.calls.slice(0, state.calls.length - 1)]
+            : [...state.calls]
+
         return {
           ...data,
           calls: [
@@ -31,8 +40,7 @@ function reducer(state, action) {
               number: data.number,
               rating: data.rating,
             },
-            // Remove the last item from the previous calls array
-            ...state.calls.slice(0, state.calls.length - 1),
+            ...newCalls,
           ],
         }
       }
@@ -81,6 +89,7 @@ function App() {
           <Display ringing={ringing} number={number} rating={rating} />
           <History connected={connected}>
             <HistoryList
+              displayNumber={NUMBER_HISTORY_ITEMS}
               calls={calls}
               onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
             />
