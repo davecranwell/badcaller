@@ -1,6 +1,7 @@
 import { Machine, DoneEventObject, assign, interpret } from 'xstate'
 import { Server } from 'socket.io'
 import SerialPort from 'serialport'
+import parsePhoneNumber, { PhoneNumber } from 'libphonenumber-js'
 
 import lookupNumber from './lib/lookupNumber'
 import makeLogger from './logger'
@@ -8,6 +9,24 @@ import makeLogger from './logger'
 import { callsDB } from './database'
 
 const logger = makeLogger('stateMachine')
+
+const formatNumber = (number: string): string => {
+  const isLocal: boolean = !number.startsWith('00') && !number.startsWith('+')
+
+  // replace leading 0 with country code if necessary
+  const normalisedNumber: string = number.replace(/0/, '+44')!
+  const parsedNumber = parsePhoneNumber(normalisedNumber)
+
+  if (!parsedNumber) {
+    return number
+  }
+
+  // if the number is local, return it in the local format
+  // if not return it in international format
+  return isLocal
+    ? parsedNumber.formatNational()
+    : parsedNumber.formatInternational()
+}
 
 type SerialModemContext = {
   ringing?: boolean
@@ -82,7 +101,7 @@ export default ({ io, serialPort }: { io: Server; serialPort: SerialPort }) => {
                 NMBR: {
                   target: 'lookingUp',
                   actions: assign({
-                    number: (context, event) => event.data,
+                    number: (context, event) => formatNumber(event.data!),
                   }),
                 },
               },
