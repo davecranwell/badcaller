@@ -15,11 +15,14 @@ function HistoryList({ displayNumber, onFetchCalls, calls, setLoading }) {
   }, [])
 
   return (
-    <ul className={'history-list'}>
-      {calls.map((call) => (
-        <HistoryItem key={call.timestamp} {...call} />
-      ))}
-    </ul>
+    <>
+      {!calls.length && <p>You've received no calls yet.</p>}
+      <ul className={'history-list'}>
+        {calls.map((call) => (
+          <HistoryItem key={call.timestamp} {...call} />
+        ))}
+      </ul>
+    </>
   )
 }
 

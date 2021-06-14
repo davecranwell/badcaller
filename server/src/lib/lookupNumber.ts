@@ -7,28 +7,24 @@ const delay = (ms: number): Promise<any> =>
 export default async (number: string): Promise<string | false> => {
   try {
     let data
+    let rating
 
     if (process.env.NODE_ENV !== 'development') {
       const ret = await axios.get(`https://who-called.co.uk/Number/${number}`)
       data = ret.data
-    } else {
-      data = `<html>
-        <div class="numberDetails">
-          <div class="dataColumn"> Dangerous </div>
-          <div class="dataColumn">123</div>
-          <div class="dataColumn">ABC</div>
-        </div>
-      </html>`
 
+      const $ = cheerio.load(data)
+      rating = $('.numberDetails .dataColumn')
+        .first()
+        .text()
+        .toLowerCase()
+        .trim()
+    } else {
+      const ratings = ['dangerous', 'negative', 'harassing', 'neutral', 'safe']
+
+      rating = ratings[Math.floor(Math.random() * ratings.length)]
       await delay(1000)
     }
-
-    const $ = cheerio.load(data)
-    const rating = $('.numberDetails .dataColumn')
-      .first()
-      .text()
-      .toLowerCase()
-      .trim()
 
     if (!rating.length) return false
 

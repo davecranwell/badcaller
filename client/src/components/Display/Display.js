@@ -32,7 +32,12 @@ function Display({ ringing, number, rating }) {
         </>
       )}
 
-      {!ringing && <h1 className="idle-label">No call currently active</h1>}
+      {!ringing && (
+        <div className={'idle'}>
+          <h1 className="idle-label">No call currently active</h1>
+          <p>When you receive a call, it will be displayed here.</p>
+        </div>
+      )}
     </div>
   )
 }

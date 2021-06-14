@@ -19,9 +19,9 @@
   margin: 0;
 }
 
-.display .idle-label {
-  opacity: 0.4;
+.display .idle {
   text-align: center;
+  opacity: 0.4;
 }
 
 .display .incoming-call-label,
