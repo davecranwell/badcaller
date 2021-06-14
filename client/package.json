@@ -40,7 +40,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "webpack-remove-debug": "^0.1.0"
-  }
+  "devDependencies": {}
 }
