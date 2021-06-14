@@ -1,3 +1,6 @@
+
+🚨 **LOOKING FOR HELP! If you're in a non-UK country I'd really appreciate your help testing modem behaviour and settings with different caller ID transmission formats e.g FSK/DTMF** 🚨
+
 # Badcaller
 
 A Raspberry Pi-enabled caller ID system which checks incoming landline calls against databases (UK-only for now) of known malicious callers, and displays a danger rating of the incomming caller on a web browser.
