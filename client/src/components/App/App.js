@@ -10,6 +10,8 @@ import HistoryList from '../History/HistoryList'
 
 import { ReactComponent as Logo } from '../../badcaller-logo.svg'
 
+import useInput from '../useInput'
+
 import './App.css'
 
 const NUMBER_HISTORY_ITEMS = 5
@@ -56,6 +58,10 @@ function reducer(state, action) {
 }
 
 function App() {
+  const [form, onCountryChange] = useInput({
+    country: 'UK',
+  })
+
   const [state, dispatch] = useReducer(reducer, {
     calls: [],
     ringing: false,
@@ -88,6 +94,20 @@ function App() {
         >
           <Display ringing={ringing} number={number} rating={rating} />
           <History connected={connected}>
+            <form>
+              <select
+                className={'select'}
+                name="email"
+                selected={form.country}
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  return onCountryChange(e)
+                }}
+              >
+                <option value="UK">UK (+44)</option>
+                <option value="US">US (+1)</option>
+              </select>
+            </form>
             <HistoryList
               displayNumber={NUMBER_HISTORY_ITEMS}
               calls={calls}
