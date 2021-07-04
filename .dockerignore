@@ -7,3 +7,5 @@ server/build
 server/test
 *.db
 extension
+api
+db

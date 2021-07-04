@@ -1,0 +1,10 @@
+{
+  "mongodb": {
+    "url": "mongodb://localhost:27017",
+    "config": {
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "useCreateIndex": true
+    }
+  }
+}

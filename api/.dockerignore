@@ -1,7 +1,4 @@
 node_modules
-server/build
-client/build
 .DS_Store
 *.tar.gz
-.env
 db
