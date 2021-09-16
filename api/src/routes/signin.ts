@@ -35,18 +35,14 @@ export default (router: Router) =>
         throw new BadRequestError('Invalid Credentials')
       }
 
-      // Generate JWT
-      const userJwt = jwt.sign(
-        {
-          id: existingUser.id,
-          email: existingUser.email,
-        },
-        config.get('jwtSecret')
-      )
-
-      // Store it on session object
       req.session = {
-        jwt: userJwt,
+        jwt: jwt.sign(
+          {
+            id: existingUser.id,
+            email: existingUser.email,
+          },
+          config.get('jwtSecret')
+        ),
       }
 
       res.json(existingUser)

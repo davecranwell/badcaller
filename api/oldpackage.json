@@ -5,6 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "next dev",
     "start": "NODE_ENV=production node build",
     "start:dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only -- src/",
     "build": "rm -rf build && tsc"
@@ -20,6 +21,7 @@
     "@types/validator": "^13.1.3",
     "@types/cookie-session": "^2.0.42",
     "@types/jsonwebtoken": "^8.5.1",
+    "next": "^10.0.0",
     "cookie-session": "^1.4.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",

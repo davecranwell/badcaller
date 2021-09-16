@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.3-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: badcaller
+      POSTGRES_DB: badcallerapi
+      POSTGRES_PASSWORD: badcaller
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080

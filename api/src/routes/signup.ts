@@ -30,18 +30,14 @@ export default (router: Router) =>
       const user = User.build({ email, password })
       await user.save()
 
-      // Generate JWT
-      const userJwt = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-        },
-        config.get('jwtSecret')
-      )
-
-      // Store it on session object
       req.session = {
-        jwt: userJwt,
+        jwt: jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          config.get('jwtSecret')
+        ),
       }
 
       res.status(201).json(user)

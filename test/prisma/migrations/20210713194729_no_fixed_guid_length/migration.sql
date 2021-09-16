@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ApiToken" ALTER COLUMN "guid" SET DATA TYPE TEXT;

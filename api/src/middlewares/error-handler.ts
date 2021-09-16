@@ -12,6 +12,6 @@ export const errorHandler = (
   }
 
   res.status(400).json({
-    errors: [{ message: 'Something went wrong', detail: Error.toString() }],
+    errors: [{ message: 'Something went wrong' }],
   })
 }
