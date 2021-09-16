@@ -4,5 +4,5 @@ client/build
 .DS_Store
 *.tar.gz
 .next
-**/db/**
+**/db
 .env.local
