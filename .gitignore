@@ -3,4 +3,6 @@ server/build
 client/build
 .DS_Store
 *.tar.gz
-*.db
+.next
+**/db/**
+.env.local
