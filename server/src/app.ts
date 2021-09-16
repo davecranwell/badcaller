@@ -3,6 +3,8 @@ import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 
+import { errorHandler } from '../../lib/middlewares/error-handler'
+import { NotFoundError } from '../../lib/errors/not-found'
 import api from './api'
 
 const app = express()
@@ -44,12 +46,10 @@ app.get('/ping', (req, res) => {
 
 app.use('/api', api)
 
-app.use((req, res) => {
-  return res.status(404).json({ message: 'Not found' })
+app.all('*', async (req, res) => {
+  throw new NotFoundError()
 })
 
-app.use((err: Error, req: Request, res: Response) => {
-  return res.status(500).json({ message: 'Error' })
-})
+app.use(errorHandler)
 
 export default app

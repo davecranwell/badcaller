@@ -9,7 +9,7 @@ interface CallQuery {
   $limit?: number
 }
 
-router.get('/calls', (req, res) => {
+router.get('/calls', (req: Request, res: Response) => {
   const { query }: { query: CallQuery } = req
   const { $sort, $limit, ...generalQuery } = query
 
