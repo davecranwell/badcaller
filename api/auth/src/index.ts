@@ -1,7 +1,7 @@
 import config from 'config'
 
 import app from './app'
-import makeLogger from '../../../lib/logger'
+import makeLogger from 'badcaller-common-lib/logger'
 
 const logger = makeLogger('index')
 
