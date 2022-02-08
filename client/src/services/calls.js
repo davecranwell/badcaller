@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-undef
-let { serverUrl = window.location.origin } = CONFIG
+let { REACT_APP_SERVER_URL: SERVER_URL = window.location.origin } = process.env
 
 export const getLatestCalls = async (limit) => {
-  const url = new URL('/api/calls', serverUrl)
+  const url = new URL('/api/calls', SERVER_URL)
   const params = {
     '$sort[timestamp]': -1,
     $limit: 5,
