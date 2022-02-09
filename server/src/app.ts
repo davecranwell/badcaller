@@ -3,9 +3,14 @@ import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 
+import { countryDB } from './database'
 import api from './api'
 
 const app = express()
+
+countryDB.findOne({ _id: 'country' }, (err, doc) => {
+  if (doc) app.set('country', doc.value)
+})
 
 app.use(
   helmet({
@@ -42,7 +47,7 @@ app.get('/ping', (req, res) => {
   return res.json({ message: 'pong' })
 })
 
-app.use('/api', api)
+app.use('/api/v1', api)
 
 app.use((req, res) => {
   return res.status(404).json({ message: 'Not found' })

@@ -31,14 +31,14 @@ const serialPort = makeSerialConnection({
 })
 
 // start state machine
-const stateMachine = makeStateMachine({ io, serialPort }).start()
+const stateMachine = makeStateMachine({ app, io, serialPort }).start()
 
 express.on('listening', async () => {
   logger.info('Started server')
 
   try {
     serialPort.open()
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e)
   }
 })
@@ -58,7 +58,7 @@ if (process.env.NODE_ENV !== 'production') {
   }, 6000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'NMBR', data: '01234567890' })
+    stateMachine.send({ type: 'NMBR', data: '07760438708' })
   }, 6500)
 
   setTimeout(() => {

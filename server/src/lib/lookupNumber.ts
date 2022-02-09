@@ -1,10 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import cheerio from 'cheerio'
+import { E164Number } from 'libphonenumber-js'
 
 const delay = (ms: number): Promise<any> =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
-export default async (number: string): Promise<string | false> => {
+export default async (number: string | E164Number): Promise<string | false> => {
   try {
     let data
     let rating

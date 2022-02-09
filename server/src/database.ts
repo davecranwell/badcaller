@@ -1,14 +1,25 @@
 import AsyncNedb from 'nedb-async'
 import config from 'config'
 
-interface Call {
+import { NumberForDB } from './stateMachine'
+
+interface Call extends NumberForDB {
   timestamp: number
-  number: string
   rating: string
+}
+
+interface Country {
+  _id: string
+  value: string
 }
 
 export const callsDB = new AsyncNedb<Call>({
   filename: `${config.get('dbDir')}/calls.db`,
+  autoload: true,
+})
+
+export const countryDB = new AsyncNedb<Country>({
+  filename: `${config.get('dbDir')}/country.db`,
   autoload: true,
 })
 
