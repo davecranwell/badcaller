@@ -2,7 +2,7 @@
 let { REACT_APP_SERVER_URL: SERVER_URL = window.location.origin } = process.env
 
 export const getLatestCalls = async (limit) => {
-  const url = new URL('/api/calls', SERVER_URL)
+  const url = new URL('/api/v1/calls', SERVER_URL)
   const params = {
     '$sort[timestamp]': -1,
     $limit: 5,

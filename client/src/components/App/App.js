@@ -7,6 +7,7 @@ import Display from '../Display/Display'
 import Status from '../Status/Status'
 import History from '../History/History'
 import HistoryList from '../History/HistoryList'
+import ErrorBoundary from '../ErrorBoundary'
 
 import { ReactComponent as Logo } from '../../badcaller-logo.svg'
 
@@ -14,7 +15,7 @@ import './App.css'
 
 const NUMBER_HISTORY_ITEMS = 5
 
-function reducer(state, action) {
+function callingStateReducer(state, action) {
   const { type, data } = action
 
   switch (type) {
@@ -56,14 +57,15 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, {
+  const [state, dispatch] = useReducer(callingStateReducer, {
     calls: [],
     ringing: false,
-    number: undefined,
+    number: {},
     rating: undefined,
   })
 
   const [connected, setConnected] = useState(false)
+  const [userCountry, setUserCountry] = useState('GB')
 
   useSocketEffect({
     connect: () => setConnected(true),
@@ -86,13 +88,24 @@ function App() {
           ${`state--${ringing ? 'callactive' : 'callinactive'}`}
         `}
         >
-          <Display ringing={ringing} number={number} rating={rating} />
+          <Display
+            ringing={ringing}
+            numberObj={number}
+            rating={rating}
+            userCountry={userCountry}
+          />
+
           <History connected={connected}>
-            <HistoryList
-              displayNumber={NUMBER_HISTORY_ITEMS}
-              calls={calls}
-              onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
-            />
+            <ErrorBoundary
+              message={'Unable to retrieve recent calls due to an error'}
+            >
+              <HistoryList
+                displayCallCount={NUMBER_HISTORY_ITEMS}
+                userCountry={userCountry}
+                calls={calls}
+                onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
+              />
+            </ErrorBoundary>
           </History>
         </main>
       </div>

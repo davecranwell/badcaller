@@ -4,10 +4,16 @@ import IsLoadingHoc from '../IsLoadingHoc'
 
 import { getLatestCalls } from '../../services/calls'
 
-function HistoryList({ displayNumber, onFetchCalls, calls, setLoading }) {
+function HistoryList({
+  displayCallCount,
+  onFetchCalls,
+  calls,
+  userCountry,
+  setLoading,
+}) {
   useEffect(() => {
     setLoading(true)
-    getLatestCalls(displayNumber).then((dataCalls) => {
+    getLatestCalls(displayCallCount).then((dataCalls) => {
       onFetchCalls(dataCalls)
       setLoading(false)
     })
@@ -19,15 +25,26 @@ function HistoryList({ displayNumber, onFetchCalls, calls, setLoading }) {
       {!calls.length && <p>You've received no calls yet.</p>}
       <ul className={'history-list'}>
         {calls.map((call) => (
-          <HistoryItem key={call.timestamp} {...call} />
+          <HistoryItem
+            key={call.timestamp}
+            userCountry={userCountry}
+            {...call}
+          />
         ))}
       </ul>
     </>
   )
 }
 
-function HistoryItem({ timestamp, number, rating }) {
+function HistoryItem({
+  timestamp,
+  number: numberObj = {},
+  rating,
+  userCountry,
+}) {
   const sDate = new Date(timestamp)
+
+  const { number, international, national, country } = numberObj
 
   return (
     <li className={'history-list-item'}>
@@ -41,7 +58,9 @@ function HistoryItem({ timestamp, number, rating }) {
           minute: '2-digit',
         })}
       </div>
-      <div className="history-list-item--number">{number}</div>
+      <div className="history-list-item--number">
+        {country === userCountry ? national || number : international || number}
+      </div>
       <div className="history-list-item--rating">{rating}</div>
     </li>
   )

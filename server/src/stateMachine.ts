@@ -179,14 +179,12 @@ export default ({
         },
       },
       services: {
-        saveCall: (context, event) => {
-          console.log(context.number)
-          return callsDB.asyncInsert({
+        saveCall: (context, event) =>
+          callsDB.asyncInsert({
             timestamp: Date.now(),
             rating: context.rating as string,
             ...context.number,
-          })
-        },
+          }),
       },
     }
   )

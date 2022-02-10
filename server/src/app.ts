@@ -50,11 +50,11 @@ app.get('/ping', (req, res) => {
 app.use('/api/v1', api)
 
 app.use((req, res) => {
-  return res.status(404).json({ message: 'Not found' })
+  return res.status(404).json({ error: 'Not found' })
 })
 
 app.use((err: Error, req: Request, res: Response) => {
-  return res.status(500).json({ message: 'Error' })
+  return res.status(500).json({ error: 'Error' })
 })
 
 export default app
