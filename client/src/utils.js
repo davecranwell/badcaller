@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import socket from './services/socket'
 
@@ -14,4 +14,17 @@ export function useSocketEffect(eventHandlers) {
       })
     }
   }, [eventHandlers])
+}
+
+export function useInput(initialValue) {
+  const [value, setValue] = useState(initialValue)
+
+  const handleChange = (event) => {
+    setValue(event.target.value)
+  }
+
+  return {
+    value,
+    onChange: handleChange,
+  }
 }

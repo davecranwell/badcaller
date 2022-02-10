@@ -23,6 +23,28 @@ main {
   overflow: hidden;
 }
 
+.countryform {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  font-size: 0.85rem;
+}
+
+@media (orientation: portrait) {
+  .countryform {
+    position: auto;
+  }
+}
+
+.countryform select {
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 0.5rem;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 @media (orientation: portrait) {
   main {
     flex-direction: column;

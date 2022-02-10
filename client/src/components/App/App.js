@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react'
+import { useReducer, useEffect, useState } from 'react'
 
 import { useSocketEffect } from '../../utils'
 
@@ -8,6 +8,8 @@ import Status from '../Status/Status'
 import History from '../History/History'
 import HistoryList from '../History/HistoryList'
 import ErrorBoundary from '../ErrorBoundary'
+
+import { getUserCountry, updateUserCountry } from '../../services/country'
 
 import { ReactComponent as Logo } from '../../badcaller-logo.svg'
 
@@ -73,6 +75,12 @@ function App() {
     result: (data) => dispatch({ type: 'result', data }),
   })
 
+  useEffect(() => {
+    getUserCountry().then((res) => {
+      setUserCountry(res.country)
+    })
+  }, [])
+
   const { ringing, number, rating, calls } = state
 
   return (
@@ -94,6 +102,21 @@ function App() {
             rating={rating}
             userCountry={userCountry}
           />
+
+          <form className="countryform">
+            <label htmlFor="country">Your country:</label>
+            <select
+              id="country"
+              onChange={(event) => {
+                updateUserCountry(event.target.value)
+                setUserCountry(event.target.value)
+              }}
+              value={userCountry}
+            >
+              <option value="GB">United Kingdom</option>
+              <option value="US">United States</option>
+            </select>
+          </form>
 
           <History connected={connected}>
             <ErrorBoundary
