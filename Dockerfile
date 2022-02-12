@@ -12,10 +12,9 @@ COPY ./server/src ./src
 COPY ./server/config ./config
 RUN npm run build
 
-FROM arm32v7/node:14-alpine as builderclient
+FROM arm32v7/node:16-alpine as builderclient
 WORKDIR /app/client
-COPY ./client/package.json ./client/package-lock.json ./client/craco.config.js ./
-COPY ./client/config ./config
+COPY ./client/package.json ./client/package-lock.json ./
 ENV NODE_ENV=production
 RUN npm ci
 

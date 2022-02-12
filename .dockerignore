@@ -5,5 +5,7 @@ client/build
 server/node_modules
 server/build
 server/test
-**/db
 extension
+api
+**/db
+**/.env.local
