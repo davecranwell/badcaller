@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import IsLoadingHoc from '../IsLoadingHoc'
 
+import { formatNumber } from '../../utils'
 import { getLatestCalls } from '../../services/calls'
 
 function HistoryList({
@@ -44,7 +45,9 @@ function HistoryItem({
 }) {
   const sDate = new Date(timestamp)
 
-  const { number, international, national, country } = numberObj
+  const numberToUse = formatNumber(numberObj, userCountry)
+
+  console.log(numberToUse)
 
   return (
     <li className={'history-list-item'}>
@@ -58,9 +61,7 @@ function HistoryItem({
           minute: '2-digit',
         })}
       </div>
-      <div className="history-list-item--number">
-        {country === userCountry ? national || number : international || number}
-      </div>
+      <div className="history-list-item--number">{numberToUse}</div>
       <div className="history-list-item--rating">{rating}</div>
     </li>
   )

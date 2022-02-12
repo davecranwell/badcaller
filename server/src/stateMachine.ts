@@ -12,7 +12,7 @@ import parsePhoneNumber, {
 import lookupNumber from './lib/lookupNumber'
 import makeLogger from './logger'
 
-import { callsDB } from './database'
+import { callsDB, contactDB } from './database'
 
 const logger = makeLogger('stateMachine')
 
@@ -21,6 +21,7 @@ export interface NumberForDB {
   country?: CountryCode
   national?: NationalNumber
   international?: E164Number
+  name?: string
 }
 
 type SerialModemContext = {
@@ -28,6 +29,7 @@ type SerialModemContext = {
   number?: NumberForDB
   rating?: string
   timeout: number
+  name?: string
 }
 
 export type SerialEvent =
@@ -36,29 +38,6 @@ export type SerialEvent =
   | { type: 'DATE'; data?: string }
   | { type: 'TIME'; data?: string }
   | { type: 'NOT_RINGING' }
-
-const formatNumber = (
-  number: string,
-  localCountry: CountryCode
-): NumberForDB => {
-  const parsedNumber = parsePhoneNumber(number, localCountry)
-
-  if (!parsedNumber || !parsedNumber.isValid()) {
-    return {
-      number,
-      country: undefined,
-      national: undefined,
-      international: undefined,
-    }
-  }
-
-  return {
-    number: parsedNumber.number,
-    country: parsedNumber.country,
-    national: parsedNumber.formatNational(),
-    international: parsedNumber.formatInternational(),
-  }
-}
 
 export default ({
   app,
@@ -125,11 +104,20 @@ export default ({
               entry: ['socketIoProgress', 'log'],
               on: {
                 NMBR: {
+                  target: 'formatting',
+                },
+              },
+            },
+            formatting: {
+              invoke: {
+                src: 'formatNumber',
+                onDone: {
                   target: 'lookingUp',
-                  actions: assign({
-                    number: (context, event) =>
-                      formatNumber(event.data!, app.get('country')),
-                  }),
+                  actions: assign({ number: (context, event) => event.data }),
+                },
+                onError: {
+                  target: 'failure',
+                  actions: assign({ number: (context, event) => event.data }),
                 },
               },
             },
@@ -179,6 +167,37 @@ export default ({
         },
       },
       services: {
+        formatNumber: async (context, event) => {
+          let number: string
+
+          if (event.type !== 'NMBR') return
+
+          number = event.data!
+
+          const parsedNumber = parsePhoneNumber(number, app.get('country'))
+
+          if (!parsedNumber || !parsedNumber.isValid()) {
+            return {
+              number,
+              country: undefined,
+              national: undefined,
+              international: undefined,
+            }
+          }
+
+          const contact = await contactDB.asyncFindOne({
+            number: parsedNumber.number,
+          })
+
+          return {
+            name: contact.name,
+            number: parsedNumber.number,
+            country: parsedNumber.country,
+            national: parsedNumber.formatNational(),
+            international: parsedNumber.formatInternational(),
+          }
+        },
+
         saveCall: (context, event) =>
           callsDB.asyncInsert({
             timestamp: Date.now(),

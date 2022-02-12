@@ -55,13 +55,13 @@
 }
 
 .display .incoming-call-number {
-  font-size: calc(80vw / var(--number-length) * 1.2);
+  font-size: calc(80vw / max(var(--number-length), 13) * 1.2);
   min-height: 10vw;
   line-height: 1;
 }
 
 .display .rating-score {
-  font-size: calc(80vw / var(--number-length) * 1.5);
+  font-size: calc(80vw / max(var(--number-length), 13) * 1.5);
   min-height: 10vw;
   line-height: 1;
 }

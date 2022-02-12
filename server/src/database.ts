@@ -13,15 +13,27 @@ interface Country {
   value: string
 }
 
+interface Contact {
+  number: string
+  name: string
+}
+
 export const callsDB = new AsyncNedb<Call>({
   filename: `${config.get('dbDir')}/calls.db`,
   autoload: true,
 })
+
+callsDB.ensureIndex({ fieldName: 'timestamp', expireAfterSeconds: 108000 }) // 30 day expiry
+callsDB.ensureIndex({ fieldName: 'number' })
 
 export const countryDB = new AsyncNedb<Country>({
   filename: `${config.get('dbDir')}/country.db`,
   autoload: true,
 })
 
-callsDB.ensureIndex({ fieldName: 'timestamp', expireAfterSeconds: 108000 }) // 30 day expiry
-callsDB.ensureIndex({ fieldName: 'number' })
+export const contactDB = new AsyncNedb<Contact>({
+  filename: `${config.get('dbDir')}/contact.db`,
+  autoload: true,
+})
+
+contactDB.ensureIndex({ fieldName: 'number' })

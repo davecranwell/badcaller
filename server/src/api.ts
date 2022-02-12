@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { CountryCode } from 'libphonenumber-js'
 
-import { callsDB, countryDB } from './database'
+import { callsDB, countryDB, contactDB } from './database'
 
 const router = express.Router()
 
@@ -12,6 +12,15 @@ interface CallQuery {
 
 interface CountryData {
   country: CountryCode
+}
+
+interface ContactQuery {
+  number: string
+}
+
+interface ContactData {
+  number: string
+  name: string
 }
 
 router.get('/calls', (req, res) => {
@@ -25,17 +34,25 @@ router.get('/calls', (req, res) => {
   // Map flat DB into array of objects with number details
   // collected in 'number' property
   search.exec((err, docs) => {
-    return res.json(
-      docs.map((doc) => ({
-        ...doc,
-        number: {
-          number: doc.number,
-          international: doc.international,
-          national: doc.national,
-          country: doc.country,
-        },
-      }))
-    )
+    Promise.all(
+      docs.map(async (doc) => {
+        // Find associated contacts
+        const contact = await contactDB.asyncFindOne({ number: doc.number })
+
+        return {
+          ...doc,
+          number: {
+            name: contact?.name,
+            number: doc.number,
+            international: doc.international,
+            national: doc.national,
+            country: doc.country,
+          },
+        }
+      })
+    ).then((callsWithContacts) => {
+      return res.json(callsWithContacts)
+    })
   })
 })
 
@@ -51,6 +68,33 @@ router.post('/country', (req, res) => {
 
     req.app.set('country', country)
     return res.json(newDocs)
+  })
+})
+
+router.post('/contact', (req, res) => {
+  const { body }: { body: ContactData } = req
+  const { number, name } = body
+
+  contactDB.update(
+    { number },
+    { name, number },
+    { upsert: true },
+    (err, numReplaced) => {
+      if (err) return res.json({ error: err })
+
+      return res.json(numReplaced)
+    }
+  )
+})
+
+router.get('/contact', (req, res) => {
+  const { query }: { query: ContactQuery } = req
+  const { number } = query
+
+  contactDB.findOne({ number }, (err, docs) => {
+    if (err) return res.json({ error: err })
+
+    return res.json(docs)
   })
 })
 

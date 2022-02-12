@@ -28,3 +28,13 @@ export function useInput(initialValue) {
     onChange: handleChange,
   }
 }
+
+export function formatNumber(numberObj, userCountry) {
+  const { name, number, country, national, international } = numberObj
+
+  return name
+    ? name
+    : userCountry === country
+    ? national || number
+    : international || number
+}
