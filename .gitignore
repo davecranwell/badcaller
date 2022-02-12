@@ -1,8 +1,8 @@
 node_modules
+db
 server/build
 client/build
 .DS_Store
-*.tar.gz
 .next
-**/db
 .env.local
+*.tar.gz

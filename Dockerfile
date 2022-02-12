@@ -1,8 +1,8 @@
-FROM arm32v7/node:14-alpine as builderserver
+FROM arm32v7/node:14.18.1-alpine3.12 as builderserver
 RUN apk update
 # linux headers required for serial.h
 RUN apk add linux-headers --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main
-RUN apk --no-cache add --virtual build-deps build-base python make gcc g++ udev
+RUN apk --no-cache add --virtual build-deps build-base python2 make gcc g++ udev
 
 WORKDIR /app/server
 COPY ./server/package.json ./server/package-lock.json ./server/tsconfig.json ./
@@ -22,7 +22,9 @@ COPY ./client/public ./public
 COPY ./client/src ./src
 RUN npm run build
 
-FROM arm32v7/node:14-alpine
+# NB: https://github.com/nodejs/docker-node/issues/1589
+# It seems many alpine images do not work with node, so a very specific version is needed
+FROM arm32v7/node:14.18.1-alpine3.12
 WORKDIR /app/server
 COPY ./server/package.json ./
 COPY --from=builderserver /app/server/node_modules ./node_modules

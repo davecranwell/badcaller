@@ -12,6 +12,15 @@ const logger = makeLogger('index')
 const port = config.get('port')
 const express = app.listen(port)
 
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p)
+  })
+  .on('uncaughtException', (err) => {
+    console.error(err, 'Uncaught Exception thrown')
+    process.exit(1)
+  })
+
 const io = new SocketServer(express, {
   cors: { origin: 'http://localhost:3000' },
 })
