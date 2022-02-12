@@ -47,8 +47,6 @@ function HistoryItem({
 
   const numberToUse = formatNumber(numberObj, userCountry)
 
-  console.log(numberToUse)
-
   return (
     <li className={'history-list-item'}>
       <div className="history-list-item--date">
