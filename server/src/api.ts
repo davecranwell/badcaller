@@ -14,10 +14,6 @@ interface CountryData {
   country: CountryCode
 }
 
-interface ContactQuery {
-  number: string
-}
-
 interface ContactData {
   number: string
   name: string
@@ -71,6 +67,14 @@ router.post('/country', (req, res) => {
   })
 })
 
+router.get('/country', (req, res) => {
+  countryDB.findOne({ _id: 'country' }, (err, doc) => {
+    return res.json({
+      country: doc?.value,
+    })
+  })
+})
+
 router.post('/contact', (req, res) => {
   const { body }: { body: ContactData } = req
   const { number, name } = body
@@ -88,21 +92,13 @@ router.post('/contact', (req, res) => {
 })
 
 router.get('/contact', (req, res) => {
-  const { query }: { query: ContactQuery } = req
+  const { query } = req
   const { number } = query
 
   contactDB.findOne({ number }, (err, docs) => {
     if (err) return res.json({ error: err })
 
     return res.json(docs)
-  })
-})
-
-router.get('/country', (req, res) => {
-  countryDB.findOne({ _id: 'country' }, (err, doc) => {
-    return res.json({
-      country: doc?.value,
-    })
   })
 })
 

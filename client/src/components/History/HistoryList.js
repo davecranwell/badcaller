@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import EasyEdit, { Types } from 'react-easy-edit'
 
 import IsLoadingHoc from '../IsLoadingHoc'
 
 import { formatNumber } from '../../utils'
-import { getLatestCalls } from '../../services/calls'
+import { getLatestCalls, renameCaller } from '../../services/calls'
 
 function HistoryList({
   displayCallCount,
@@ -12,14 +13,15 @@ function HistoryList({
   userCountry,
   setLoading,
 }) {
+  const [lastUpdated, setLastUpdated] = useState(Date.now())
+
   useEffect(() => {
     setLoading(true)
     getLatestCalls(displayCallCount).then((dataCalls) => {
       onFetchCalls(dataCalls)
       setLoading(false)
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [lastUpdated])
 
   return (
     <>
@@ -29,6 +31,7 @@ function HistoryList({
           <HistoryItem
             key={call.timestamp}
             userCountry={userCountry}
+            onRenameCaller={() => setLastUpdated(Date.now())}
             {...call}
           />
         ))}
@@ -42,10 +45,17 @@ function HistoryItem({
   number: numberObj = {},
   rating,
   userCountry,
+  onRenameCaller,
 }) {
   const sDate = new Date(timestamp)
 
   const numberToUse = formatNumber(numberObj, userCountry)
+
+  const handleRename = async (value) => {
+    return renameCaller(numberObj.number, value).then(() => {
+      onRenameCaller()
+    })
+  }
 
   return (
     <li className={'history-list-item'}>
@@ -59,7 +69,16 @@ function HistoryItem({
           minute: '2-digit',
         })}
       </div>
-      <div className="history-list-item--number">{numberToUse}</div>
+      <div className="history-list-item--number">
+        <EasyEdit
+          value={numberToUse}
+          type={Types.TEXT}
+          onSave={handleRename}
+          saveButtonLabel="Save"
+          cancelButtonLabel="Cancel"
+          attributes={{}}
+        />
+      </div>
       <div className="history-list-item--rating">{rating}</div>
     </li>
   )

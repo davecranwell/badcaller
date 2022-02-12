@@ -12,3 +12,14 @@ export const getLatestCalls = async (limit) => {
 
   return fetch(url).then((response) => response.json())
 }
+
+export const renameCaller = async (number, name) => {
+  const url = new URL('/api/v1/contact', SERVER_URL)
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ number, name }),
+  }).then((response) => response.json())
+}

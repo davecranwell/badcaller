@@ -5,8 +5,6 @@ import { formatNumber } from '../../utils'
 import './Display.css'
 
 function Display({ ringing, numberObj = {}, rating, userCountry }) {
-  const { country, international, national, number, name } = numberObj
-
   const numberToUse = formatNumber(numberObj, userCountry)
 
   return (

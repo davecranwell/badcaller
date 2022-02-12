@@ -190,7 +190,7 @@ export default ({
           })
 
           return {
-            name: contact.name,
+            name: contact?.name,
             number: parsedNumber.number,
             country: parsedNumber.country,
             national: parsedNumber.formatNational(),

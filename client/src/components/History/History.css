@@ -70,6 +70,16 @@
   text-transform: capitalize;
 }
 
+.history-list-item--controls {
+  display: none;
+}
+
+@media (hover: hover) {
+  .history-list-item--controls {
+    display: block;
+  }
+}
+
 @media (orientation: portrait) {
   .history-list-item {
     display: flex;
@@ -94,4 +104,41 @@
 .history .spinner {
   width: 4vw;
   height: 4vw;
+}
+
+.easy-edit-wrapper {
+  padding: 2px;
+  border: 2px solid transparent;
+  margin-left: -4px;
+}
+
+.easy-edit-hover-on {
+  font-style: normal !important;
+  cursor: pointer;
+}
+
+.easy-edit-inline-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.easy-edit-component-wrapper {
+  flex: 1;
+}
+
+.easy-edit-component-wrapper input {
+  width: 100%;
+  font-size: 0.8rem;
+  padding: 2px;
+}
+
+.easy-edit-button-wrapper {
+  display: flex !important;
+}
+
+.easy-edit-button {
+}
+
+.easy-edit-instructions {
+  width: 100%;
 }
