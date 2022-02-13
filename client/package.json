@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "private": true,
   "sideEffects": false,
   "dependencies": {
@@ -18,8 +18,8 @@
   "scripts": {
     "start": "NODE_ENV=localhost react-scripts start",
     "build": "NODE_ENV=production INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "craco test",
-    "eject": "craco eject"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

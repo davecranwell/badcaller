@@ -4,6 +4,10 @@ RUN apk update
 RUN apk add linux-headers --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN apk --no-cache add --virtual build-deps build-base python2 make gcc g++ udev
 
+# Copy only package.json of the client across so server can build reading the version 
+# for broadcast to the front end
+WORKDIR /app/client
+COPY ./client/package.json ./
 WORKDIR /app/server
 COPY ./server/package.json ./server/package-lock.json ./server/tsconfig.json ./
 ENV NODE_ENV=production

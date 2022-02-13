@@ -2,5 +2,6 @@
   "port": 8080,
   "loggingLevel": "info",
   "serialPort": "/dev/ttyACM0",
-  "dbDir": "/app/db"
+  "dbDir": "/app/db",
+  "clientBuildDir": "/app/client/build"
 }

@@ -2,5 +2,6 @@
   "port": 8080,
   "loggingLevel": "trace",
   "serialPort": "/dev/ROBOT",
-  "dbDir": "../db"
+  "dbDir": "../db",
+  "clientBuildDir": "/home/foo/badcaller/client/build"
 }

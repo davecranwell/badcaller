@@ -2,6 +2,7 @@ import path from 'path'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
+import config from 'config'
 
 import { countryDB } from './database'
 import api from './api'
@@ -34,13 +35,10 @@ app.use(express.json())
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 
-app.use(
-  '/',
-  express.static(path.join(__dirname, '..', '..', 'client', 'build'))
-)
+app.use('/', express.static(config.get('clientBuildDir')))
 
 app.get('/static', (req, res) => {
-  express.static(path.join(__dirname, '..', '..', 'client', 'build', 'static'))
+  express.static(path.join(config.get('clientBuildDir'), 'static'))
 })
 
 app.get('/ping', (req, res) => {
