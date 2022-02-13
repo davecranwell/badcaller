@@ -1,6 +1,9 @@
 import config from 'config'
 import { Server as SocketServer } from 'socket.io'
 
+import serverPackage from '../package.json'
+import clientPackage from '../../client/package.json'
+
 import app from './app'
 import makeLogger from './logger'
 import makeSerialConnection from './lib/serialInterface'
@@ -27,6 +30,10 @@ const io = new SocketServer(express, {
 
 io.on('connection', (socket) => {
   logger.info('Client socket connected')
+  io.emit('versions', {
+    client: clientPackage.version,
+    server: serverPackage.version,
+  })
   io.emit('progress', {
     ...stateMachine.state.context,
   })

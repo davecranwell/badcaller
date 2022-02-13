@@ -68,9 +68,21 @@ function App() {
 
   const [connected, setConnected] = useState(false)
   const [userCountry, setUserCountry] = useState('GB')
+  const [versions, setVersions] = useState({})
 
   useSocketEffect({
     connect: () => setConnected(true),
+    versions: (data) => {
+      if (
+        versions.client &&
+        versions.server &&
+        (data.client !== versions.client || data.server !== versions.server)
+      ) {
+        document.location.reload()
+      } else if (!versions.client || !versions.server) {
+        setVersions(data)
+      }
+    },
     progress: (data) => dispatch({ type: 'progress', data }),
     result: (data) => dispatch({ type: 'result', data }),
   })
