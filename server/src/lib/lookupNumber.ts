@@ -5,12 +5,23 @@ import { E164Number } from 'libphonenumber-js'
 const delay = (ms: number): Promise<any> =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
-export default async (number: string | E164Number): Promise<string | false> => {
+const ratings = [
+  'dangerous',
+  'negative',
+  'harassing',
+  'neutral',
+  'safe',
+] as const
+
+// convert ratings array to union type
+export type Rating = typeof ratings[number]
+
+export default async (number: string | E164Number): Promise<Rating | false> => {
   try {
     let data
-    let rating
+    let rating: Rating
 
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV === 'production') {
       const ret = await axios.get(`https://who-called.co.uk/Number/${number}`)
       data = ret.data
 
@@ -19,15 +30,13 @@ export default async (number: string | E164Number): Promise<string | false> => {
         .first()
         .text()
         .toLowerCase()
-        .trim()
+        .trim() as Rating
     } else {
-      const ratings = ['dangerous', 'negative', 'harassing', 'neutral', 'safe']
-
       rating = ratings[Math.floor(Math.random() * ratings.length)]
       await delay(1000)
     }
 
-    if (!rating.length) return false
+    if (!rating.length) return 'neutral'
 
     return rating
   } catch (e) {

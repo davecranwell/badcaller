@@ -3,25 +3,17 @@ import EasyEdit, { Types } from 'react-easy-edit'
 
 import IsLoadingHoc from '../IsLoadingHoc'
 
-import { formatNumber } from '../../utils'
+import { displayContact } from '../../utils'
 import { getLatestCalls, renameCaller } from '../../services/calls'
 
-function HistoryList({
-  displayCallCount,
-  onFetchCalls,
-  calls,
-  userCountry,
-  setLoading,
-}) {
+function HistoryList({ displayCallCount, onFetchCalls, calls, userCountry }) {
   const [lastUpdated, setLastUpdated] = useState(Date.now())
 
   useEffect(() => {
-    setLoading(true)
     getLatestCalls(displayCallCount).then((dataCalls) => {
       onFetchCalls(dataCalls)
-      setLoading(false)
     })
-  }, [lastUpdated])
+  }, [lastUpdated, displayCallCount, onFetchCalls])
 
   return (
     <>
@@ -49,7 +41,7 @@ function HistoryItem({
 }) {
   const sDate = new Date(timestamp)
 
-  const numberToUse = formatNumber(numberObj, userCountry)
+  const contact = displayContact(numberObj, userCountry)
 
   const handleRename = async (value) => {
     return renameCaller(numberObj.number, value).then(() => {
@@ -63,7 +55,7 @@ function HistoryItem({
         {sDate.toLocaleString([], {
           weekday: 'short',
           year: 'numeric',
-          month: 'long',
+          month: 'short',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
@@ -71,7 +63,7 @@ function HistoryItem({
       </div>
       <div className="history-list-item--number">
         <EasyEdit
-          value={numberToUse}
+          value={contact}
           type={Types.TEXT}
           onSave={handleRename}
           saveButtonLabel="Save"

@@ -1,11 +1,11 @@
 import Spinner from '../Spinner/Spinner'
 
-import { formatNumber } from '../../utils'
+import { displayContact } from '../../utils'
 
 import './Display.css'
 
 function Display({ ringing, numberObj = {}, rating, userCountry }) {
-  const numberToUse = formatNumber(numberObj, userCountry)
+  const contact = displayContact(numberObj, userCountry)
 
   return (
     <div className={'display'}>
@@ -18,19 +18,19 @@ function Display({ ringing, numberObj = {}, rating, userCountry }) {
             <span
               className="incoming-call-number"
               style={{
-                '--number-length': (numberToUse && numberToUse.length) || 0,
+                '--number-length': (contact && contact.length) || 0,
               }}
             >
-              {numberToUse || ''} {!numberToUse && <Spinner />}
+              {contact || ''} {!contact && <Spinner />}
             </span>
           </h1>
-          {numberToUse && (
+          {contact && (
             <h2 className="rating">
               <span className="rating-label">{ringing && 'Rated as'}</span>
               <span
                 className="rating-score"
                 style={{
-                  '--number-length': (numberToUse && numberToUse.length) || 0,
+                  '--number-length': (contact && contact.length) || 0,
                 }}
               >
                 {rating} {!rating && <Spinner />}

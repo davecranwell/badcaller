@@ -1,4 +1,4 @@
-import { Machine, DoneEventObject, assign, interpret } from 'xstate'
+import { Machine, DoneInvokeEvent, assign, interpret, EventData } from 'xstate'
 import { Application } from 'express'
 import { Server } from 'socket.io'
 import SerialPort from 'serialport'
@@ -9,10 +9,11 @@ import parsePhoneNumber, {
   PhoneNumber,
 } from 'libphonenumber-js'
 
-import lookupNumber from './lib/lookupNumber'
+import formatNumber from './lib/formatNumber'
+import lookupNumber, { Rating } from './lib/lookupNumber'
 import makeLogger from './logger'
 
-import { callsDB, contactDB } from './database'
+import { callsDB } from './database'
 
 const logger = makeLogger('stateMachine')
 
@@ -110,7 +111,11 @@ export default ({
             },
             formatting: {
               invoke: {
-                src: 'formatNumber',
+                src: async (context, event) => {
+                  if (event.type === 'NMBR') {
+                    return formatNumber(event.data!, app.get('country'))
+                  }
+                },
                 onDone: {
                   target: 'lookingUp',
                   actions: assign({ number: (context, event) => event.data }),
@@ -125,10 +130,16 @@ export default ({
               entry: ['socketIoProgress', 'log'],
               invoke: {
                 id: 'LOOKEDUP',
-                src: (context, event) => lookupNumber(context?.number!.number!),
+                src: (context, event) =>
+                  lookupNumber(
+                    (event as DoneInvokeEvent<NumberForDB>).data.number!
+                  ),
                 onDone: {
                   target: 'success',
-                  actions: assign({ rating: (context, event) => event.data }),
+                  actions: assign({
+                    rating: (context, event: DoneInvokeEvent<Rating>) =>
+                      event.data,
+                  }),
                 },
                 onError: {
                   target: 'failure',
@@ -167,37 +178,6 @@ export default ({
         },
       },
       services: {
-        formatNumber: async (context, event) => {
-          let number: string
-
-          if (event.type !== 'NMBR') return
-
-          number = event.data!
-
-          const parsedNumber = parsePhoneNumber(number, app.get('country'))
-
-          if (!parsedNumber || !parsedNumber.isValid()) {
-            return {
-              number,
-              country: undefined,
-              national: undefined,
-              international: undefined,
-            }
-          }
-
-          const contact = await contactDB.asyncFindOne({
-            number: parsedNumber.number,
-          })
-
-          return {
-            name: contact?.name,
-            number: parsedNumber.number,
-            country: parsedNumber.country,
-            national: parsedNumber.formatNational(),
-            international: parsedNumber.formatInternational(),
-          }
-        },
-
         saveCall: (context, event) =>
           callsDB.asyncInsert({
             timestamp: Date.now(),

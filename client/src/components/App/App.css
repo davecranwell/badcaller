@@ -33,7 +33,7 @@ main {
 
 @media (orientation: portrait) {
   .countryform {
-    position: auto;
+    position: relative;
   }
 }
 

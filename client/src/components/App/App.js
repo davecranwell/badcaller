@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState } from 'react'
+import { useReducer, useEffect, useState, useCallback } from 'react'
 
 import { useSocketEffect } from '../../utils'
 
@@ -27,30 +27,30 @@ function callingStateReducer(state, action) {
         calls: data,
       }
     case 'result':
-      if (data.number && data.rating) {
-        const newCalls =
-          // Remove the last item from the previous calls array if the history
-          // is already at max allowed length
-          state.calls.length >= NUMBER_HISTORY_ITEMS
-            ? [...state.calls.slice(0, state.calls.length - 1)]
-            : [...state.calls]
+      if (!data.number || !data.rating) return state
 
-        return {
-          ...data,
-          calls: [
-            {
-              timestamp: Date.now(),
-              number: data.number,
-              rating: data.rating,
-            },
-            ...newCalls,
-          ],
-        }
+      const newCalls =
+        // Remove the last item from the previous calls array if the history
+        // is already at max allowed length
+        state.calls.length >= NUMBER_HISTORY_ITEMS
+          ? [...state.calls.slice(0, state.calls.length - 1)]
+          : [...state.calls]
+
+      return {
+        ...state,
+        ...data,
+        calls: [
+          {
+            timestamp: Date.now(),
+            number: data.number,
+            rating: data.rating,
+          },
+          ...newCalls,
+        ],
       }
-      break
     case 'progress':
       return {
-        calls: state.calls,
+        ...state,
         ...data,
       }
     default:
@@ -69,6 +69,11 @@ function App() {
   const [connected, setConnected] = useState(false)
   const [userCountry, setUserCountry] = useState('GB')
   const [versions, setVersions] = useState({})
+
+  const onFetchCalls = useCallback(
+    (data) => dispatch({ type: 'setCalls', data }),
+    []
+  )
 
   useSocketEffect({
     connect: () => setConnected(true),
@@ -138,7 +143,7 @@ function App() {
                 displayCallCount={NUMBER_HISTORY_ITEMS}
                 userCountry={userCountry}
                 calls={calls}
-                onFetchCalls={(data) => dispatch({ type: 'setCalls', data })}
+                onFetchCalls={onFetchCalls}
               />
             </ErrorBoundary>
           </History>

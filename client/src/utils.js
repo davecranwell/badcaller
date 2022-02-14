@@ -29,7 +29,7 @@ export function useInput(initialValue) {
   }
 }
 
-export function formatNumber(numberObj, userCountry) {
+export function displayContact(numberObj, userCountry) {
   const { name, number, country, national, international } = numberObj
 
   return name
