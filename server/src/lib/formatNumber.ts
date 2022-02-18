@@ -1,12 +1,6 @@
-import parsePhoneNumber, {
-  CountryCode,
-  E164Number,
-  NationalNumber,
-  parseNumber,
-  PhoneNumber,
-} from 'libphonenumber-js'
+import parsePhoneNumber, { CountryCode } from 'libphonenumber-js'
 
-import { NumberForDB } from '../stateMachine'
+import { NumberForDB } from '../types'
 import { contactDB } from '../database'
 
 export default async (

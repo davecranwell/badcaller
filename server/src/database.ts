@@ -1,7 +1,7 @@
 import AsyncNedb from 'nedb-async'
 import config from 'config'
 
-import { NumberForDB } from './stateMachine'
+import { NumberForDB } from './types'
 
 interface Call extends NumberForDB {
   timestamp: number

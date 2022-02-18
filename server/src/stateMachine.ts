@@ -14,16 +14,9 @@ import lookupNumber, { Rating } from './lib/lookupNumber'
 import makeLogger from './logger'
 
 import { callsDB } from './database'
+import { NumberForDB } from './types'
 
 const logger = makeLogger('stateMachine')
-
-export interface NumberForDB {
-  number?: E164Number | string
-  country?: CountryCode
-  national?: NationalNumber
-  international?: E164Number
-  name?: string
-}
 
 type SerialModemContext = {
   ringing?: boolean
@@ -131,9 +124,7 @@ export default ({
               invoke: {
                 id: 'LOOKEDUP',
                 src: (context, event) =>
-                  lookupNumber(
-                    (event as DoneInvokeEvent<NumberForDB>).data.number!
-                  ),
+                  lookupNumber((event as DoneInvokeEvent<NumberForDB>).data!),
                 onDone: {
                   target: 'success',
                   actions: assign({
