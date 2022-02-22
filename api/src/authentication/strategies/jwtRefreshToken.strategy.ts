@@ -24,7 +24,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: JwtTokenPayload) {
+  async validate(request: Request, payload: JwtTokenPayload) {
     return this.accountsService.getUserIfRefreshTokenMatches(
       ExtractJwt.fromAuthHeaderAsBearerToken()(request),
       payload.userId,

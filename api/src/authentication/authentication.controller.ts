@@ -29,7 +29,7 @@ import JwtRefreshGuard from './guards/jwtRefresh.guard';
 import { LowerCasePipe } from 'src/app.pipes';
 import RegisterDto from './dto/register.dto';
 import { LoginResponseDto, LoginDto, MagicLoginDto } from './dto/login.dto';
-import { MagicLinkGuard } from './guards/magiclink.guard';
+import { MagicLinkGuard } from './guards/magicLink.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
 export interface RequestWithUser extends Request {
   user: AuthModel;
