@@ -11,7 +11,7 @@ COPY ./client/package.json ./
 WORKDIR /app/server
 COPY ./server/package.json ./server/package-lock.json ./server/tsconfig.json ./
 ENV NODE_ENV=production
-RUN npm ci
+RUN npm ci --only=production
 COPY ./server/src ./src
 COPY ./server/config ./config
 RUN npm run build
@@ -20,7 +20,7 @@ FROM arm32v7/node:16-alpine as builderclient
 WORKDIR /app/client
 COPY ./client/package.json ./client/package-lock.json ./
 ENV NODE_ENV=production
-RUN npm ci
+RUN npm ci --only=production
 
 COPY ./client/public ./public
 COPY ./client/src ./src
