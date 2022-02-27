@@ -1,3 +1,9 @@
-.data
-prisma
 test
+node_modules
+dist
+.env
+.gitignore
+.nvmrc
+.prettierrc
+nest-cli.json
+README.md
