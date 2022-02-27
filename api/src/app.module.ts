@@ -7,18 +7,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { AccountsModule } from './accounts/accounts.module';
-import { UpdatesModule } from './updates/updates.module';
+import { PhonenumbersModule } from './phonenumbers/phonenumbers.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     AuthenticationModule,
-    UpdatesModule,
     AccountsModule,
     ThrottlerModule.forRoot({
-      ttl: 60,
+      ttl: 1,
       limit: 1,
     }),
+    PhonenumbersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

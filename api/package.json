@@ -40,6 +40,7 @@
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
     "helmet": "^4.6.0",
+    "libphonenumber-js": "^1.9.49",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

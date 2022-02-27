@@ -14,6 +14,7 @@ import { exit } from 'process';
 const logger = new Logger();
 
 process.on('unhandledRejection', (err: PromiseRejectedResult) => {
+  console.log(err);
   logger.error(`Unhandled promise rejection reason: ${err?.reason}`);
   exit(1);
 });

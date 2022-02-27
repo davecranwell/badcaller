@@ -9,12 +9,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { PostgresErrorCode } from '../types';
 import { JwtTokenPayload, MagicTokenPayload } from './strategies/types';
 import { AccountsService } from '../accounts/accounts.service';
-
-enum PostgresErrorCode {
-  UniqueViolation = 'P2002',
-}
 
 @Injectable()
 export class AuthenticationService {
@@ -107,14 +104,14 @@ export class AuthenticationService {
   }
 
   public sendMagicLink(email: string) {
-    const payload: MagicTokenPayload = { email };
+    const payload: MagicTokenPayload = { email: email.toLowerCase() };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('MAGIC_LINK_SECRET'),
       expiresIn: `${this.configService.get('MAGIC_LINK_EXPIRATION_TIME')}s`,
     });
 
     return {
-      callback: `/log-in/magic/callback?token=${token}`,
+      callback: `/authentication/log-in/magic/callback?token=${token}`,
     };
   }
 }

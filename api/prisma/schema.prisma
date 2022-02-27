@@ -11,10 +11,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Auth {
-  id               Int     @id @default(autoincrement())
-  name             String?
-  email            String  @unique(map: "Auth_email_unique_constraint")
+model Account {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique(map: "Auth_email_unique_constraint")
   password         String?
   refreshTokenHash String?
+  createdDate      DateTime
+  lastAuthDate     DateTime
+  Rating           Rating[]
+}
+
+model Phonenumber {
+  id          BigInt   @id
+  createdDate DateTime
+  Rating      Rating[]
+}
+
+model Rating {
+  id            Int         @id @default(autoincrement())
+  phoneNumber   Phonenumber @relation(fields: [phonenumberId], references: [id])
+  phonenumberId BigInt
+  rating        Int
+  account       Account     @relation(fields: [accountId], references: [id])
+  accountId     Int
+  createdDate   DateTime
 }

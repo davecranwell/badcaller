@@ -18,7 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Auth as AuthModel } from '@prisma/client';
+import { Account } from '@prisma/client';
 
 import { AuthenticationService } from './authentication.service';
 import { LocalAuthenticationGuard } from './guards/localAuthentication.guard';
@@ -31,11 +31,13 @@ import RegisterDto from './dto/register.dto';
 import { LoginResponseDto, LoginDto, MagicLoginDto } from './dto/login.dto';
 import { MagicLinkGuard } from './guards/magicLink.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
+
 export interface RequestWithUser extends Request {
-  user: AuthModel;
+  user: Account;
 }
+
 @ApiTags('Authentication')
-// @UseGuards(ThrottlerGuard)
+@UseGuards(ThrottlerGuard)
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
@@ -47,23 +49,7 @@ export class AuthenticationController {
     return this.authenticationService.register(registrationData);
   }
 
-  @ApiOkResponse({ type: AccountEntity })
-  @UsePipes(new LowerCasePipe('body', ['email']))
-  @Post('register')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async register(@Body() registrationData: RegisterDto) {
-    return new AccountEntity(await this.registerAccount(registrationData));
-  }
-
-  @ApiOkResponse({ type: LoginResponseDto })
-  @UseGuards(LocalAuthenticationGuard)
-  @Post('log-in')
-  async logIn(
-    @Req() request: RequestWithUser,
-    @Body() loginData?: LoginDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { user } = request;
-
+  private async logIn(user: Account) {
     const { token: accessToken, cookie: accessTokenCookie } =
       this.authenticationService.getJwtToken(user.id);
     const { token: refreshToken, cookie: refreshTokenCookie } =
@@ -71,13 +57,40 @@ export class AuthenticationController {
 
     await this.accountsService.setRefreshToken(refreshToken, user.id);
 
-    request.res.setHeader('Set-Cookie', [
-      accessTokenCookie,
-      refreshTokenCookie,
-    ]);
-
     return <LoginResponseDto>{ accessToken, refreshToken };
   }
+
+  // @ApiOkResponse({ type: AccountEntity })
+  // @UsePipes(new LowerCasePipe('body', ['email']))
+  // @Post('register')
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async register(@Body() registrationData: RegisterDto) {
+  //   return new AccountEntity(await this.registerAccount(registrationData));
+  // }
+
+  // @ApiOkResponse({ type: LoginResponseDto })
+  // @UseGuards(LocalAuthenticationGuard)
+  // @Post('log-in')
+  // async logIn(
+  //   @Req() request: RequestWithUser,
+  //   @Body() loginData?: LoginDto,
+  // ): Promise<{ accessToken: string; refreshToken: string }> {
+  //   const { user } = request;
+
+  //   const { token: accessToken, cookie: accessTokenCookie } =
+  //     this.authenticationService.getJwtToken(user.id);
+  //   const { token: refreshToken, cookie: refreshTokenCookie } =
+  //     this.authenticationService.getJwtRefreshToken(user.id);
+
+  //   await this.accountsService.setRefreshToken(refreshToken, user.id);
+
+  //   request.res.setHeader('Set-Cookie', [
+  //     accessTokenCookie,
+  //     refreshTokenCookie,
+  //   ]);
+
+  //   return <LoginResponseDto>{ accessToken, refreshToken };
+  // }
 
   @ApiOkResponse()
   @ApiBearerAuth()
@@ -106,7 +119,7 @@ export class AuthenticationController {
      * By fully logging in again, we can create permanent logins that are also
      * revokable by invalidating the refresh token hash in the database
      */
-    return this.logIn(request);
+    return this.logIn(request.user);
   }
 
   @ApiBearerAuth('access-token')
@@ -139,6 +152,6 @@ export class AuthenticationController {
       });
     }
 
-    return this.logIn(request);
+    return this.logIn(request.user);
   }
 }

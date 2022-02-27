@@ -9,7 +9,7 @@ export class AccountsService {
   constructor(private prisma: PrismaService) {}
 
   async getById(id: number) {
-    const user = await this.prisma.auth.findUnique({ where: { id } });
+    const user = await this.prisma.account.findUnique({ where: { id } });
     if (user) {
       return new AccountEntity(user);
     }
@@ -17,7 +17,7 @@ export class AccountsService {
   }
 
   async getByEmail(email: string): Promise<AccountEntity> {
-    const user = await this.prisma.auth.findUnique({
+    const user = await this.prisma.account.findUnique({
       where: { email: email.toLowerCase() },
     });
     if (user) {
@@ -31,27 +31,35 @@ export class AccountsService {
     password?: string;
   }): Promise<AccountEntity> {
     return new AccountEntity(
-      await this.prisma.auth.create({ data: accountData }),
+      await this.prisma.account.create({
+        data: {
+          ...accountData,
+          createdDate: new Date().toISOString(),
+          lastAuthDate: new Date().toISOString(),
+        },
+      }),
     );
   }
 
   async setRefreshToken(refreshToken: string, userId: number) {
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    await this.prisma.auth.update({
+    await this.prisma.account.update({
       where: { id: userId },
       data: { refreshTokenHash },
     });
   }
 
   async removeRefreshToken(userId: number) {
-    return this.prisma.auth.update({
+    return this.prisma.account.update({
       where: { id: userId },
       data: { refreshTokenHash: null },
     });
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
-    const user = await this.prisma.auth.findUnique({ where: { id: userId } });
+    const user = await this.prisma.account.findUnique({
+      where: { id: userId },
+    });
 
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,

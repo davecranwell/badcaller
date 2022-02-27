@@ -1,4 +1,4 @@
-version: "3.1"
+version: '3.1'
 services:
   postgres:
     container_name: postgres
@@ -6,11 +6,17 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./data:/tmp/pg
-    env_file:
-      - docker.env
- 
+      - postgres-vol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: badcaller
+
   adminer:
     image: adminer
     ports:
       - 8090:8080
+
+# This syntax required by WSL
+volumes:
+  postgres-vol:
