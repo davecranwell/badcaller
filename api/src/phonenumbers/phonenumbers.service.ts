@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { PostgresErrorCode } from '../types';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePhonenumberDto } from './dto/create-phonenumber.dto';
 import { RatePhonenumberDto } from './dto/rate-phonenumber.dto';
 import { UpdatePhonenumberDto } from './dto/update-phonenumber.dto';

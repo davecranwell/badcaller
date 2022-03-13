@@ -74,7 +74,7 @@ if (process.env.NODE_ENV !== 'production') {
   }, 6000)
 
   setTimeout(() => {
-    stateMachine.send({ type: 'NMBR', data: '01234567890' })
+    stateMachine.send({ type: 'NMBR', data: '01630814006' })
   }, 6500)
 
   setTimeout(() => {

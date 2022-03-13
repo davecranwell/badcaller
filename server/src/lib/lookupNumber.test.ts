@@ -8,15 +8,15 @@ afterEach(() => {
 
 it('Sends the right part of a properly formatted number', () => {
   const number = {
-    number: '+441234567890',
-    national: '01234567890',
-    international: '+441234567890',
+    number: '+44 12345 67890',
+    national: '01234 567890',
+    international: '+44 12345 67890',
   }
 
   const result = lookupNumber(number)
 
   return expect(mockAxios.get).toHaveBeenCalledWith(
-    `https://who-called.co.uk/Number/${number.national}`
+    `https://who-called.co.uk/Number/01234567890`
   )
 })
 
