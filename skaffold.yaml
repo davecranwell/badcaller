@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: badcaller
+build:
+  artifacts:
+  - image: api-nginx
+    context: api/nginx
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - api/nginx/deployment.yaml
