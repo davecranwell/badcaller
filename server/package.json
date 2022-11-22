@@ -36,7 +36,7 @@
     "pino": "^6.11.3",
     "pino-pretty": "^4.7.1",
     "serialport": "^9.0.7",
-    "socket.io": "^4.0.1",
+    "socket.io": "^4.5.3",
     "xstate": "^4.18.0"
   },
   "devDependencies": {
