@@ -9,7 +9,7 @@ RUN apk --no-cache add --virtual build-deps build-base python2 make gcc g++ udev
 WORKDIR /app/client
 COPY ./client/package.json ./
 WORKDIR /app/server
-COPY ./server/package.json ./server/package-lock.json ./server/tsconfig.json ./
+COPY ./server/package*.json ./server/tsconfig.json ./
 ENV NODE_ENV=production
 RUN npm ci --only=production
 COPY ./server/src ./src
@@ -18,7 +18,7 @@ RUN npm run build
 
 FROM arm32v7/node:16-alpine as builderclient
 WORKDIR /app/client
-COPY ./client/package.json ./client/package-lock.json ./
+COPY ./client/package*.json ./
 ENV NODE_ENV=production
 RUN npm ci --only=production
 
