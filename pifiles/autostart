@@ -1,0 +1,11 @@
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s off
+@xset -dpms
+@xset s noblank
+@sed -i 's/'exited_cleanly':false/'exited_cleanly':true/' ~/.config/chromium-browser/Default/Preferences
+@chromium-browser --noerrdialogs --disable-infobars --kiosk --incognito http://localhost/
+@/home/pi/xauth_root.sh
+@/home/pi/launch-pir-manage.sh
