@@ -1,4 +1,3 @@
-
 🚨 **LOOKING FOR HELP! If you're in a non-UK country I'd really appreciate your help testing modem behaviour and settings with different caller ID transmission formats e.g FSK/DTMF** 🚨
 
 # Badcaller
@@ -50,6 +49,29 @@ The docker-compose file includes [Watchtower](https://containrrr.dev/watchtower/
 
 Watchtower will keep the Badcaller container up to date whenever you run docker-compose, even if you don't run it in the background.
 
+---
+
+## Development
+
+### Installation
+
+```
+cd server && npm i
+cd client && npm i
+```
+
+### Running
+
+```
+cd server && npm run dev
+cd client && npm run start
+```
+
+### Building
+
+1. Run installation steps
+2. Run `./makedocker.sh`
+
 # Todo
 
 - A way to support multiple and/or country-specific phone number lookup websites
@@ -70,3 +92,7 @@ https://github.com/kjepper/CallerPi A repo I stumbled across during research tha
 ### Support
 
 None.
+
+```
+
+```

@@ -3,12 +3,23 @@
   justify-content: center;
   text-align: left;
   padding: 30px clamp(20px, 3vw, 50px);
-  font-size: 0.8rem;
   width: clamp(310px, 20vw, 500px);
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   max-height: 100vh;
   overflow-y: auto;
 }
+
+/* @media screen and (min-width: 320px) {
+  .history {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .history {
+    font-size: 0.8rem;
+  }
+} */
 
 .history--inverse {
   border-left: 1px solid rgba(0, 0, 0, 0.1);

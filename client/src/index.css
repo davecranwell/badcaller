@@ -12,10 +12,10 @@ select {
   html,
   input,
   select {
-    font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+    font-size: calc(16px + (6 * ((100vw - 320px) / 680)));
   }
 }
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1025px) {
   html,
   input,
   select {

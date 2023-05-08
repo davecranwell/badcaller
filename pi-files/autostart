@@ -1,0 +1,12 @@
+#https://www.flyerdaviduk.com/2020/01/08/raspberry-pi-kiosk-with-pir-activity-detector/
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+
+#https://www.geeks3d.com/hacklab/20160108/how-to-disable-the-blank-screen-on-raspberry-pi-raspbian/
+#@xset s off
+#@xset -dpms
+#@xset s noblank
+@sed -i 's/'exited_cleanly':false/'exited_cleanly':true/' ~/.config/chromium-browser/Default/Preferences
+#@chromium-browser --noerrdialogs --disable-infobars --disable-pinch --no-touch-pinch --kiosk --incognito http://localhost/

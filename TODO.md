@@ -3,3 +3,9 @@ https://www.flyerdaviduk.com/2020/01/08/raspberry-pi-kiosk-with-pir-activity-det
 
 Details on how to remotely set wifi
 https://raspberrytips.com/raspberry-pi-wifi-setup/
+
+Screen blanking access
+https://stackoverflow.com/questions/54784133/how-to-turn-off-the-screen-from-a-docker-container
+
+Building custom images
+https://medium.com/@deltazero/making-kioskpi-custom-raspberry-pi-os-image-using-pi-gen-99aac2cd8cb6
