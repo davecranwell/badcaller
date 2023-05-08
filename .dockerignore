@@ -3,6 +3,7 @@
 .prettierrc.json
 .prettierignore
 .nvmrc
+pi-files
 server/test
 extension
 api
