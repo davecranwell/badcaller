@@ -1,5 +1,11 @@
+# /home/pi/.config/lxsession/LXDE-pi/autostart
 hdmi_group=2
 hdmi_mode=87
 hdmi_drive=2
 display_rotate=0
+# causes screen to go fully off, but can cause 'no signal' display
+# hdmi_blanking=1
+# these two considered necessary to prevent "no signal" message when hdmi_blanking is enabled
+# hdmi_force_hotplug=1
+# config_hdmi_boost=4
 hdmi_cvt 1024 600 60 6 0 0 0
