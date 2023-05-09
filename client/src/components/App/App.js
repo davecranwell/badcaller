@@ -75,6 +75,14 @@ function App() {
     []
   )
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+
+    if (+urlParams.get('kiosk')) {
+      document.documentElement.style = 'cursor:none'
+    }
+  }, [])
+
   useSocketEffect({
     connect: () => setConnected(true),
     versions: (data) => {
