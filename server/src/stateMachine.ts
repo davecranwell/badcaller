@@ -165,7 +165,7 @@ export default ({
             }
           )
         },
-        screensaveOff: (ccontext, event) => {
+        screensaverOff: (ccontext, event) => {
           exec('export DISPLAY=:0; xset s reset', (err, stdout, stderr) => {
             if (err) {
               logger.error(`exec error: ${err}`)
