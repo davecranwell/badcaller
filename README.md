@@ -67,6 +67,13 @@ cd server && npm run dev
 cd client && npm run start
 ```
 
+### Simulating serial data during testing
+
+1. Install socat: `sudo apt-get install socat`
+2. Start a socat session `socat -d -d pty,raw,echo=0 pty,raw,echo=0`
+3. Set the serial port for your `docker-compose up` or `npm run dev` command to be the first of the PTYs created by socat e.g /dev/pts/1
+4. Send commands to that port: `echo "RING=" > /dev/pts/1`
+
 ### Building
 
 1. Run installation steps
