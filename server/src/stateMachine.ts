@@ -1,3 +1,4 @@
+import { exec } from 'child_process'
 import { Machine, DoneInvokeEvent, assign, interpret, EventData } from 'xstate'
 import { Application } from 'express'
 import { Server } from 'socket.io'
@@ -54,7 +55,7 @@ export default ({
       },
       states: {
         idle: {
-          entry: ['socketIoProgress', 'log'],
+          entry: ['screensaverOn', 'socketIoProgress', 'log'],
           on: {
             RING: {
               target: 'ringing',
@@ -66,7 +67,7 @@ export default ({
         },
         ringing: {
           initial: 'awaitingNumber',
-          entry: ['socketIoProgress', 'log'],
+          entry: ['screensaverOff', 'socketIoProgress', 'log'],
           invoke: {
             id: 'ringTimeout',
             src: (context) => (cb) => {
@@ -93,7 +94,6 @@ export default ({
             },
           },
           states: {
-            reset: {},
             awaitingNumber: {
               entry: ['socketIoProgress', 'log'],
               on: {
@@ -153,6 +153,27 @@ export default ({
     },
     {
       actions: {
+        screensaverOn: (context, event) => {
+          exec(
+            'export DISPLAY=:0; xset s 60; xset s blank',
+            (err, stdout, stderr) => {
+              if (err) {
+                logger.error(`exec error: ${err}`)
+                return
+              }
+              logger.trace(`stdout: ${stdout}`)
+            }
+          )
+        },
+        screensaveOff: (ccontext, event) => {
+          exec('export DISPLAY=:0; xset s reset', (err, stdout, stderr) => {
+            if (err) {
+              logger.error(`exec error: ${err}`)
+              return
+            }
+            logger.trace(`stdout: ${stdout}`)
+          })
+        },
         socketIoProgress: (context, event) => {
           io.emit('progress', context)
         },
