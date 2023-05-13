@@ -1,3 +1,0 @@
-{
-  serialPort: 'SERIAL_PORT'
-}
