@@ -4,12 +4,15 @@ services:
   badcaller:
     image: index.docker.io/xcession2k/badcaller:latest
     restart: always
+    #privileged: true
     ports:
       - 80:8080
     expose:
       - 80
     devices:
       - '/dev/ttyACM0:/dev/ttyACM0'
+    #environment:
+    #  - SERIAL_PORT=/dev/ttyACM0
     logging:
       driver: 'json-file'
       options:
@@ -17,6 +20,7 @@ services:
         max-size: '10m'
     volumes:
       - ./db/:/app/db
+    #  - /dev/pts/1:/dev/ttyACM0
   watchtower:
     image: v2tec/watchtower:armhf-latest
     restart: always
@@ -24,3 +28,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/pi/.docker/config.json:/config.json
     command: --interval 30
+    #logging:
+    #  driver: none
