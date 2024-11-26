@@ -37,7 +37,7 @@
     "@types/passport-local": "^1.0.34",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "helmet": "^4.6.0",
     "libphonenumber-js": "^1.9.49",
